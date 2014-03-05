@@ -8,6 +8,10 @@
 
 #import "BDKBeersViewController.h"
 
+#import "UIViewController+BDKUntappd.h"
+
+#import <BDKUntappd/BDKUntappd.h>
+
 @interface BDKBeersViewController ()
 
 @end
@@ -17,6 +21,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Your Recent Beers";
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.untappd checkinsForUser:nil completion:^(id responseObject, NSError *error) {
+        NSLog(@"%@", responseObject);
+    }];
 }
 
 @end

@@ -24,7 +24,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (instancetype)initWithClientId:(NSString *)clientId
                     clientSecret:(NSString *)clientSecret
                      redirectUrl:(NSString *)redirectUrl {
-    self = [super init];
+    self = [super initWithBaseURL:[NSURL URLWithString:BDKUntappdBaseURL]];
     if (!self) return nil;
     
     _clientId = clientId;
@@ -54,11 +54,23 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
                              @"redirect_url": self.redirectUrl,
                              @"response_type": @"code",
                              @"code": accessCode};
-    //"meta":{ "http_code":200 }, "response" : { "access_token":{ "TOKENHERE" } }
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
         if (responseObject[@"response"][@"access_token"]) {
             self.accessToken = responseObject[@"response"][@"access_token"];
         }
+        completion(responseObject, nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        completion(nil, error);
+    }];
+}
+
+#pragma mark - User data
+
+- (void)checkinsForUser:(NSString *)username completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!username || !!self.accessToken, @"Either username or a saved access token must be supplied.");
+    
+    NSString *url = [NSString stringWithFormat:@"/v4/user/checkins%@%@", username ? @"/" : @"", username ?: @""];
+    [self GET:url parameters:[self authorizationParams] success:^(NSURLSessionDataTask *task, id responseObject) {
         completion(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         completion(nil, error);

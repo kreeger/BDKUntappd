@@ -17,6 +17,7 @@
 		B5DB308718C6C62100CCF3E2 /* BDKAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308618C6C62100CCF3E2 /* BDKAuthViewController.m */; };
 		B5DB308918C6C93900CCF3E2 /* BDKUntappdSecrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = B5DB308818C6C93900CCF3E2 /* BDKUntappdSecrets.plist */; };
 		B5DB308C18C6CEB400CCF3E2 /* BDKBeersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308B18C6CEB400CCF3E2 /* BDKBeersViewController.m */; };
+		B5DB309018C6D44100CCF3E2 /* UIViewController+BDKUntappd.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308F18C6D44100CCF3E2 /* UIViewController+BDKUntappd.m */; };
 		B5DEC1E318C6BA30007F9B49 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5DEC1E218C6BA30007F9B49 /* Foundation.framework */; };
 		B5DEC1E518C6BA30007F9B49 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5DEC1E418C6BA30007F9B49 /* CoreGraphics.framework */; };
 		B5DEC1E718C6BA30007F9B49 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5DEC1E618C6BA30007F9B49 /* UIKit.framework */; };
@@ -53,6 +54,8 @@
 		B5DB308818C6C93900CCF3E2 /* BDKUntappdSecrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BDKUntappdSecrets.plist; sourceTree = "<group>"; };
 		B5DB308A18C6CEB400CCF3E2 /* BDKBeersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDKBeersViewController.h; sourceTree = "<group>"; };
 		B5DB308B18C6CEB400CCF3E2 /* BDKBeersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDKBeersViewController.m; sourceTree = "<group>"; };
+		B5DB308E18C6D44100CCF3E2 /* UIViewController+BDKUntappd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+BDKUntappd.h"; sourceTree = "<group>"; };
+		B5DB308F18C6D44100CCF3E2 /* UIViewController+BDKUntappd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+BDKUntappd.m"; sourceTree = "<group>"; };
 		B5DEC1DF18C6BA30007F9B49 /* BDKUntappd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BDKUntappd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5DEC1E218C6BA30007F9B49 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B5DEC1E418C6BA30007F9B49 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -90,6 +93,7 @@
 		B518904C18C6BC7200C80BE0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B5DB308D18C6D43600CCF3E2 /* Categories */,
 				B518904D18C6BC7200C80BE0 /* Core */,
 				B518905218C6BC7200C80BE0 /* ViewControllers */,
 			);
@@ -145,6 +149,15 @@
 				B518906E18C6BD2500C80BE0 /* Specs-Prefix.pch */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		B5DB308D18C6D43600CCF3E2 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				B5DB308E18C6D44100CCF3E2 /* UIViewController+BDKUntappd.h */,
+				B5DB308F18C6D44100CCF3E2 /* UIViewController+BDKUntappd.m */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		B5DEC1D618C6BA30007F9B49 = {
@@ -316,6 +329,7 @@
 				B5DB308C18C6CEB400CCF3E2 /* BDKBeersViewController.m in Sources */,
 				B5DB308718C6C62100CCF3E2 /* BDKAuthViewController.m in Sources */,
 				B518905918C6BC7200C80BE0 /* main.m in Sources */,
+				B5DB309018C6D44100CCF3E2 /* UIViewController+BDKUntappd.m in Sources */,
 				B518905818C6BC7200C80BE0 /* BDKAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

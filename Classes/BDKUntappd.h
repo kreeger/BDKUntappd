@@ -44,6 +44,24 @@ extern NSString * const BDKUntappdBaseURL;
  */
 - (NSURLRequest *)authenticationURLRequest;
 
+/**
+ Uses the OAuth2 dance to swap a temporary access code for a full access token.
+ Upon successful response, the access token is stored in this instance for future requests.
+ 
+ @param accessCode The access code to store; will be saved as `self.accessCode`.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
 - (void)authorizeForAccessCode:(NSString *)accessCode completion:(BDKUntappdResultBlock)completion;
+
+#pragma mark - User data
+
+/**
+ Gets the latest checkins for a particular user. You may omit the username; if so, the current user's checkins will be
+ retrieved.
+ 
+ @param username The username of the user for which to retrieve checkins.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)checkinsForUser:(NSString *)username completion:(BDKUntappdResultBlock)completion;
 
 @end
