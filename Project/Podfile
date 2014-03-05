@@ -1,7 +1,9 @@
 pod "BDKUntappd", :path => "../BDKUntappd.podspec"
 
-target "Demo" do
-end
+inhibit_all_warnings!
 
-target "DemoTests" do
-end
+# target "BDKUntapped" do
+# end
+
+# target "Specs" do
+# end

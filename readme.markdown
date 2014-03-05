@@ -18,7 +18,7 @@ it simply add the following line to your Podfile:
 
 ## Author
 
-Ben Kreeger, ben@kree.gr
+Ben Kreeger, benjaminkreeger@gmail.com
 
 ## License
 

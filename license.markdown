@@ -1,4 +1,4 @@
-Copyright (c) 2014 Ben Kreeger <ben@kree.gr>
+Copyright (c) 2014 Ben Kreeger <benjaminkreeger@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
