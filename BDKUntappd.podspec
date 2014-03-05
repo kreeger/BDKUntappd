@@ -12,13 +12,13 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.8'
   s.requires_arc = true
 
-  s.source_files = 'Classes'
-  s.resources = 'Assets'
-
+  s.source_files = 'Classes/**/*.{h,m}'
+  # s.resources = 'Assets'
   s.ios.exclude_files = 'Classes/osx'
   s.osx.exclude_files = 'Classes/ios'
   # s.public_header_files = 'Classes/**/*.h'
   # s.frameworks = 'SomeFramework', 'AnotherFramework'
   s.dependency 'AFNetworking/Serialization', '>= 2.0.0'
   s.dependency 'AFNetworking/NSURLSession', '>= 2.0.0'
+  s.dependency 'TransformerKit'
 end

@@ -7,6 +7,8 @@
 
 #import "BDKUntappd.h"
 
+#import "BDKUntappdModels.h"
+
 NSString * const BDKUntappdBaseURL = @"http://api.untappd.com/v4";
 NSString * const BDKUntappdAuthenticateURL = @"https://untappd.com/oauth/authenticate";
 NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize";
@@ -71,7 +73,12 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     
     NSString *url = [NSString stringWithFormat:@"/v4/user/checkins%@%@", username ? @"/" : @"", username ?: @""];
     [self GET:url parameters:[self authorizationParams] success:^(NSURLSessionDataTask *task, id responseObject) {
-        completion(responseObject, nil);
+        NSMutableArray *checkins = [NSMutableArray array];
+        [responseObject[@"response"][@"checkins"][@"items"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            BDKUntappdCheckin *checkin = [BDKUntappdCheckin modelWithDictionary:obj];
+            [checkins addObject:checkin];
+        }];
+        completion(checkins, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         completion(nil, error);
     }];
