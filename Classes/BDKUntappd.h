@@ -64,4 +64,18 @@ extern NSString * const BDKUntappdBaseURL;
  */
 - (void)checkinsForUser:(NSString *)username completion:(BDKUntappdResultBlock)completion;
 
+/**
+ Gets the latest checkins for a particular user. You may omit the username; if so, the current user's checkins will be
+ retrieved.
+ 
+ @param username The username of the user for which to retrieve checkins.
+ @param maxId The checkin ID that you want results to start wtih.
+ @param limit The number of results to return; if set to 0, default value of 25 will be used.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)checkinsForUser:(NSString *)username
+                  maxId:(NSNumber *)maxId
+                  limit:(NSInteger)limit
+             completion:(BDKUntappdResultBlock)completion;
+
 @end

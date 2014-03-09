@@ -92,6 +92,8 @@ static const char *property_getTypeName(objc_property_t property) {
         }
         [self setValue:identifierValue forKey:@"identifier"];
     }
+    
+    NSLog(@"Updated %@.", self);
 }
 
 - (void)dealloc {
@@ -158,7 +160,7 @@ static const char *property_getTypeName(objc_property_t property) {
 + (NSString *)remotePropertyNameForLocalPropertyName:(NSString *)localPropertyName {
     NSString *unLlamad = [[NSValueTransformer valueTransformerForName:TTTLlamaCaseStringTransformerName]
                           reverseTransformedValue:localPropertyName];
-    return [[NSValueTransformer valueTransformerForName:TTTTrainCaseStringTransformerName] transformedValue:unLlamad];
+    return [[NSValueTransformer valueTransformerForName:TTTSnakeCaseStringTransformerName] transformedValue:unLlamad];
 }
 
 + (BOOL)property:(NSString *)propertyName isReadOnlyForClass:(Class)klass {

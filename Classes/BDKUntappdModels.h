@@ -1,2 +1,5 @@
 #import "BDKUntappdModel.h"
+#import "BDKUntappdBeer.h"
+#import "BDKUntappdBrewery.h"
 #import "BDKUntappdCheckin.h"
+#import "BDKUntappdUser.h"

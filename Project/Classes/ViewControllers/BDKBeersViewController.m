@@ -25,7 +25,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.untappd checkinsForUser:nil completion:^(id responseObject, NSError *error) {
+    [self.untappd checkinsForUser:nil maxId:nil limit:5 completion:^(id responseObject, NSError *error) {
         NSLog(@"%@", responseObject);
     }];
 }

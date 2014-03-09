@@ -7,18 +7,20 @@
 
 #import "BDKUntappdModel.h"
 
+@class BDKUntappdBeer, BDKUntappdBrewery, BDKUntappdUser;
+
 @interface BDKUntappdCheckin : BDKUntappdModel
 
 @property (strong, nonatomic) NSArray *badges;
-@property (strong, nonatomic) NSDictionary *beer;
-@property (strong, nonatomic) NSDictionary *brewery;
+@property (strong, nonatomic) BDKUntappdBeer *beer;
+@property (strong, nonatomic) BDKUntappdBrewery *brewery;
 @property (strong, nonatomic) NSArray *comments;
 @property (strong, nonatomic) NSDate *createdAt;
 @property (strong, nonatomic) NSArray *media;
 @property (strong, nonatomic) NSNumber *ratingScore;
 @property (strong, nonatomic) NSDictionary *source;
 @property (strong, nonatomic) NSArray *toasts;
-@property (strong, nonatomic) NSDictionary *user;
+@property (strong, nonatomic) BDKUntappdUser *user;
 @property (strong, nonatomic) NSDictionary *venue;
 
 @end

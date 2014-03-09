@@ -15,7 +15,8 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 
 @interface BDKUntappd ()
 
-- (NSDictionary *)authorizationParamsForCode:(NSString *)accessCode;
+- (NSDictionary *)authorizationParams;
+- (NSDictionary *)authorizationParamsWithParams:(NSDictionary *)params;
 
 @end
 
@@ -69,10 +70,22 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 #pragma mark - User data
 
 - (void)checkinsForUser:(NSString *)username completion:(BDKUntappdResultBlock)completion {
+    [self checkinsForUser:username maxId:nil limit:0 completion:completion];
+}
+
+- (void)checkinsForUser:(NSString *)username
+                  maxId:(NSNumber *)maxId
+                  limit:(NSInteger)limit
+             completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username || !!self.accessToken, @"Either username or a saved access token must be supplied.");
-    
     NSString *url = [NSString stringWithFormat:@"/v4/user/checkins%@%@", username ? @"/" : @"", username ?: @""];
-    [self GET:url parameters:[self authorizationParams] success:^(NSURLSessionDataTask *task, id responseObject) {
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if (maxId) params[@"max_id"] = maxId;
+    if (limit > 0 && limit <= 50) params[@"limit"] = @(limit);
+    params = [self authorizationParamsWithParams:params];
+    
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
         NSMutableArray *checkins = [NSMutableArray array];
         [responseObject[@"response"][@"checkins"][@"items"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             BDKUntappdCheckin *checkin = [BDKUntappdCheckin modelWithDictionary:obj];
@@ -92,6 +105,16 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     }
     return @{@"client_id": self.clientId,
              @"client_secret": self.clientSecret,};
+}
+
+- (NSDictionary *)authorizationParamsWithParams:(NSDictionary *)params {
+    if ([params count] == 0) return [self authorizationParams];
+    
+    NSMutableDictionary *merge = [[self authorizationParams] mutableCopy];
+    [params enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        merge[key] = obj;
+    }];
+    return [merge copy];
 }
 
 @end
