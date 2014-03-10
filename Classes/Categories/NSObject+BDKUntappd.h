@@ -5,6 +5,8 @@
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
+@import Foundation;
+
 @interface NSObject (BDKUntappd)
 
 - (BOOL)bdk_isPresent;

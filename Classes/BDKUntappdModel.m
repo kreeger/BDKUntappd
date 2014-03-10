@@ -32,7 +32,11 @@ static const char *property_getTypeName(objc_property_t property) {
 @implementation BDKUntappdModel
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary {
-    return [[self alloc] initWithDictionary:dictionary];
+    return [[self alloc] initWithDictionary:dictionary dateFormatter:nil];
+}
+
++ (instancetype)modelWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
+    return [[self alloc] initWithDictionary:dictionary dateFormatter:dateFormatter];
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
@@ -42,7 +46,18 @@ static const char *property_getTypeName(objc_property_t property) {
     return self;
 }
 
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
+    self = [super init];
+    if (!self) return nil;
+    [self updateWithDictionary:dictionary dateFormatter:dateFormatter];
+    return self;
+}
+
 - (void)updateWithDictionary:(NSDictionary *)dictionary {
+    [self updateWithDictionary:dictionary dateFormatter:nil];
+}
+
+- (void)updateWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
     NSArray *properties = [[self class] propertyNamesForClass:[self class]];
     [properties enumerateObjectsUsingBlock:^(NSString *propertyName, NSUInteger idx, BOOL *stop) {
         NSString *remoteName = [[self class] remotePropertyNameForLocalPropertyName:propertyName];
@@ -58,7 +73,6 @@ static const char *property_getTypeName(objc_property_t property) {
                 Class klass = [[self class] classForPropertyName:propertyName inClass:[self class]];
                 val = [[klass alloc] initWithDictionary:val];
             }
-            
         }
         
         if ([val isKindOfClass:[NSArray class]]) {
@@ -79,7 +93,16 @@ static const char *property_getTypeName(objc_property_t property) {
                 }
             }];
             val = [objects copy];
-            
+        }
+        
+        // Check for a few additional string conversions based on the real property class.
+        if ([val isKindOfClass:[NSString class]]) {
+            Class klass = [[self class] classForPropertyName:propertyName inClass:[self class]];
+            if ([klass isSubclassOfClass:[NSURL class]]) {
+                val = [NSURL URLWithString:val];
+            } else if ([klass isSubclassOfClass:[NSDate class]]) {
+                val = [dateFormatter dateFromString:val];
+            }
         }
         
         [self setValue:val forKey:propertyName];

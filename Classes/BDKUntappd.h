@@ -5,11 +5,14 @@
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
+@import Foundation;
 #import <AFNetworking/AFHTTPSessionManager.h>
 
 typedef void (^BDKUntappdResultBlock)(id responseObject, NSError *error);
 
 extern NSString * const BDKUntappdBaseURL;
+
+@class BDKUntappdParser;
 
 /**
  Provides a standardized interface to the Untappd API.
@@ -21,6 +24,8 @@ extern NSString * const BDKUntappdBaseURL;
 @property (readonly, strong, nonatomic) NSString *redirectUrl;
 
 @property (strong, nonatomic) NSString *accessToken;
+
+@property (strong, nonatomic) BDKUntappdParser *parser;
 
 /**
  Generates and returns an instance of this API client with OAuth2 credentials.
