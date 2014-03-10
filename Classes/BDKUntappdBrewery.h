@@ -10,11 +10,14 @@
 
 @interface BDKUntappdBrewery : BDKUntappdModel
 
-@property (assign, nonatomic, getter = breweryIsActive) BOOL breweryActive;
-@property (strong, nonatomic) NSURL *breweryLabel;
-@property (strong, nonatomic) NSString *breweryName;
+@property (assign, nonatomic, getter = breweryIsActive) BOOL active;
+@property (strong, nonatomic) NSURL *label;
+@property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSDictionary *contact;
 @property (strong, nonatomic) NSString *countryName;
-@property (strong, nonatomic) NSDictionary *location;
+@property (strong, nonatomic) NSString *city;
+@property (strong, nonatomic) NSString *state;
+@property (strong, nonatomic) NSNumber *latitude;
+@property (strong, nonatomic) NSNumber *longitude;
 
 @end

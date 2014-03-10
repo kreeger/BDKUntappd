@@ -12,8 +12,21 @@
 
 #pragma mark - BDKUntappdModel
 
-- (NSString *)remoteIdentifierName {
-    return @"uid";
+- (NSDictionary *)remoteMappings {
+    return @{@"bio": @"bio",
+             @"facebookIdentifier": @"contact/facebook",
+             @"foursquareIdentifier": @"contact/foursquare",
+             @"twitterIdentifier": @"contact/twitter",
+             @"firstName": @"first_name",
+             @"privateUser": @"is_private",
+             @"supporter": @"is_supporter",
+             @"lastName": @"last_name",
+             @"location": @"location",
+             @"relationship": @"relationship",
+             @"identifier": @"uid",
+             @"url": @"url",
+             @"userAvatar": @"user_avatar",
+             @"userName": @"user_name",};
 }
 
 #pragma mark - NSObject

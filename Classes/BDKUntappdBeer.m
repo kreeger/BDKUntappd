@@ -12,15 +12,22 @@
 
 #pragma mark - BDKUntappdModel
 
-- (NSString *)remoteIdentifierName {
-    return @"bid";
+- (NSDictionary *)remoteMappings {
+    return @{@"authorRating": @"auth_rating",
+             @"alcoholByVolume": @"beer_abv",
+             @"active": @"beer_active",
+             @"labelURL": @"beer_label",
+             @"name": @"beer_name",
+             @"style": @"beer_style",
+             @"identifier": @"bid",
+             @"onWishList": @"wish_list",};
 }
 
 #pragma mark - NSObject
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@ %p> { id: %@, beerName: %@, beerStyle: %@ }",
-            NSStringFromClass([self class]), self, self.identifier, self.beerName, self.beerStyle];
+    return [NSString stringWithFormat:@"<%@ %p> { id: %@, name: %@, style: %@, ABV: %@%% }",
+            NSStringFromClass([self class]), self, self.identifier, self.name, self.style, self.alcoholByVolume];
 }
 
 @end

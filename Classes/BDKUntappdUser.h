@@ -11,10 +11,12 @@
 @interface BDKUntappdUser : BDKUntappdModel
 
 @property (strong, nonatomic) NSString *bio;
-@property (strong, nonatomic) NSDictionary *contact;
+@property (strong, nonatomic) NSString *facebookIdentifier;
+@property (strong, nonatomic) NSString *foursquareIdentifier;
+@property (strong, nonatomic) NSString *twitterIdentifier;
 @property (strong, nonatomic) NSString *firstName;
-@property (assign, nonatomic) BOOL isPrivate;
-@property (assign, nonatomic) BOOL isSupporter;
+@property (assign, nonatomic, getter = isPrivateUser) BOOL privateUser;
+@property (assign, nonatomic, getter = isSupporter) BOOL supporter;
 @property (strong, nonatomic) NSString *lastName;
 @property (strong, nonatomic) NSString *location;
 @property (strong, nonatomic) NSString *relationship;

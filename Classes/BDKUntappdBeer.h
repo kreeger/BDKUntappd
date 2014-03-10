@@ -10,12 +10,12 @@
 
 @interface BDKUntappdBeer : BDKUntappdModel
 
-@property (strong, nonatomic) NSNumber *authRating;
-@property (strong, nonatomic) NSNumber *beerAbv;
-@property (assign, nonatomic, getter = beerIsActive) BOOL beerActive;
-@property (strong, nonatomic) NSURL *beerLabel;
-@property (strong, nonatomic) NSString *beerName;
-@property (strong, nonatomic) NSString *beerStyle;
-@property (assign, nonatomic, getter = isOnWishList) BOOL wishList;
+@property (strong, nonatomic) NSNumber *authorRating;
+@property (strong, nonatomic) NSNumber *alcoholByVolume;
+@property (assign, nonatomic, getter = isActive) BOOL active;
+@property (strong, nonatomic) NSURL *labelURL;
+@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSString *style;
+@property (assign, nonatomic, getter = isOnWishList) BOOL onWishList;
 
 @end

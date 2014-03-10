@@ -20,5 +20,4 @@ Pod::Spec.new do |s|
   # s.frameworks = 'SomeFramework', 'AnotherFramework'
   s.dependency 'AFNetworking/Serialization', '>= 2.0.0'
   s.dependency 'AFNetworking/NSURLSession', '>= 2.0.0'
-  s.dependency 'TransformerKit'
 end

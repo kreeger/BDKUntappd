@@ -11,13 +11,21 @@
 
 #pragma mark - BDKUntappdModel
 
-- (void)updateWithDictionary:(NSDictionary *)dictionary {
-    [super updateWithDictionary:dictionary];
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-}
-
-- (NSString *)remoteIdentifierName {
-    return @"checkin_id";
+- (NSDictionary *)remoteMappings {
+    return @{@"badges": @"badges",
+             @"beer": @"beer",
+             @"brewery": @"brewery",
+             @"checkinComment": @"checkin_comment",
+             @"identifier": @"checkin_id",
+             @"comments": @"comments",
+             @"createdAt": @"created_at",
+             @"media": @"media",
+             @"ratingScore": @"rating_score",
+             @"sourceAppName": @"source/app_name",
+             @"sourceAppWebsite": @"source/app_website",
+             @"toasts": @"toasts",
+             @"user": @"user",
+             @"venue": @"venue"};
 }
 
 #pragma mark - NSObject

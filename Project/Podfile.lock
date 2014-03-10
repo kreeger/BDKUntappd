@@ -11,8 +11,6 @@ PODS:
   - BDKUntappd (0.1.0):
     - AFNetworking/NSURLSession (>= 2.0.0)
     - AFNetworking/Serialization (>= 2.0.0)
-    - TransformerKit
-  - TransformerKit (0.3.1)
 
 DEPENDENCIES:
   - BDKUntappd (from `../BDKUntappd.podspec`)
@@ -23,7 +21,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: e8cfd8f3fe3bfe19124a0cc63f4d45752d892a56
-  BDKUntappd: 527ef70470c6071031237e38b2d89db2928fa1b4
-  TransformerKit: 612d3966b31e345f2abc8221fe6657379bb5d8b6
+  BDKUntappd: e924f885a96ff2de5b5f8ceda1b36003d29a50ce
 
 COCOAPODS: 0.29.0

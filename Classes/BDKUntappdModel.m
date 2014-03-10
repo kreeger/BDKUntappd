@@ -9,8 +9,6 @@
 
 #import "NSObject+BDKUntappd.h"
 
-#import <TransformerKit/TransformerKit.h>
-#import <TransformerKit/NSValueTransformer+TransformerKit.h>
 #import <objc/runtime.h>
 
 // Praise be to Jastor. https://github.com/elado/jastor
@@ -58,31 +56,40 @@ static const char *property_getTypeName(objc_property_t property) {
 }
 
 - (void)updateWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
-    NSArray *properties = [[self class] propertyNamesForClass:[self class]];
-    [properties enumerateObjectsUsingBlock:^(NSString *propertyName, NSUInteger idx, BOOL *stop) {
-        NSString *remoteName = [[self class] remotePropertyNameForLocalPropertyName:propertyName];
-        id val = dictionary[remoteName];
-        if (![val bdk_isPresent]) return;
+    [self.remoteMappings enumerateKeysAndObjectsUsingBlock:^(NSString *propertyName, NSString *remoteName, BOOL *stop) {
+        id remoteValue;
+        if ([remoteName rangeOfString:@"/"].location == NSNotFound) {
+            remoteValue = dictionary[remoteName];
+        } else {
+            NSArray *components = [remoteName componentsSeparatedByString:@"/"];
+            id nestedValue = dictionary[components[0]];
+            for (int idx = 1; idx < [components count]; idx++) {
+                nestedValue = nestedValue[components[idx]];
+            }
+            remoteValue = nestedValue;
+        }
+        
+        if (![remoteValue bdk_isPresent]) return;
         if ([[self class] property:propertyName isReadOnlyForClass:[self class]]) return;
         
-        if ([val isKindOfClass:[NSDictionary class]]) {
+        if ([remoteValue isKindOfClass:[NSDictionary class]]) {
             // Untappd's API has arrays nested in dictionaries with some metadata; this pulls it out and rights it.
-            if (val[@"items"]) {
-                val = val[@"items"];
+            if (remoteValue[@"items"]) {
+                remoteValue = remoteValue[@"items"];
             } else {
                 Class klass = [[self class] classForPropertyName:propertyName inClass:[self class]];
-                val = [[klass alloc] initWithDictionary:val];
+                remoteValue = [[klass alloc] initWithDictionary:remoteValue];
             }
         }
         
-        if ([val isKindOfClass:[NSArray class]]) {
-            NSArray *valuesForVal = (NSArray *)val;
+        if ([remoteValue isKindOfClass:[NSArray class]]) {
+            NSArray *valuesForVal = (NSArray *)remoteValue;
             NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[valuesForVal count]];
             [valuesForVal enumerateObjectsUsingBlock:^(id subVal, NSUInteger idx, BOOL *stop) {
                 if ([[subVal class] isSubclassOfClass:[NSDictionary class]]) {
                     SEL classSelector = NSSelectorFromString([NSString stringWithFormat:@"%@_class", propertyName]);
-                    if ([[self class] respondsToSelector:classSelector]) {
-                        Class klass = [[self class] performSelector:classSelector];
+                    if ([self respondsToSelector:classSelector]) {
+                        Class klass = [self performSelector:classSelector];
                         if ([klass isSubclassOfClass:[BDKUntappdModel class]]) {
                             BDKUntappdModel *model = [[klass alloc] initWithDictionary:subVal];
                             [objects addObject:model];
@@ -92,23 +99,24 @@ static const char *property_getTypeName(objc_property_t property) {
                     [objects addObject:subVal];
                 }
             }];
-            val = [objects copy];
+            remoteValue = [objects copy];
         }
         
         // Check for a few additional string conversions based on the real property class.
-        if ([val isKindOfClass:[NSString class]]) {
+        if ([remoteValue isKindOfClass:[NSString class]]) {
             Class klass = [[self class] classForPropertyName:propertyName inClass:[self class]];
             if ([klass isSubclassOfClass:[NSURL class]]) {
-                val = [NSURL URLWithString:val];
+                remoteValue = [NSURL URLWithString:remoteValue];
             } else if ([klass isSubclassOfClass:[NSDate class]]) {
-                val = [dateFormatter dateFromString:val];
+                remoteValue = [dateFormatter dateFromString:remoteValue];
             }
         }
         
-        [self setValue:val forKey:propertyName];
+        [self setValue:remoteValue forKey:propertyName];
     }];
     
-    id identifierValue = [dictionary objectForKey:self.remoteIdentifierName];
+    // Ensure an incoming identifier is really just a string.
+    id identifierValue = dictionary[self.remoteMappings[@"identifier"]];
     if ([identifierValue bdk_isPresent]) {
         if (![identifierValue isKindOfClass:[NSString class]]) {
             identifierValue = [NSString stringWithFormat:@"%@", identifierValue];
@@ -129,8 +137,8 @@ static const char *property_getTypeName(objc_property_t property) {
 
 #pragma mark - Properties
 
-- (NSString *)remoteIdentifierName {
-    return @"id";
+- (NSDictionary *)remoteMappings {
+    return @{};
 }
 
 #pragma mark - NSCoding
@@ -139,11 +147,7 @@ static const char *property_getTypeName(objc_property_t property) {
     self = [super init];
     if (!self) return nil;
     
-    id decoded = [aDecoder decodeObjectForKey:@"identifier"];
-    [self setValue:decoded forKey:@"identifier"];
-    
-    NSArray *propertyNames = [[self class] propertyNamesForClass:[self class]];
-    [propertyNames enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+    [[self.remoteMappings allKeys] enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
         if ([[self class] property:key isReadOnlyForClass:[self class]]) return;
         id decoded = [aDecoder decodeObjectForKey:key];
         if (![decoded bdk_isPresent]) return;
@@ -153,38 +157,12 @@ static const char *property_getTypeName(objc_property_t property) {
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.identifier forKey:@"identifier"];
-    NSArray *propertyNames = [[self class] propertyNamesForClass:[self class]];
-    [propertyNames enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+    [[self.remoteMappings allKeys] enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
 		[aCoder encodeObject:[self valueForKey:key] forKey:key];
     }];
 }
 
 #pragma mark - Private methods
-
-+ (NSArray *)propertyNamesForClass:(Class)klass {
-    if (klass == [BDKUntappdModel class]) {
-        return [NSArray array];
-    }
-    
-	int numberOfProperties = 0;
-	objc_property_t *propertyTypes = class_copyPropertyList(klass, &numberOfProperties);
-    
-	NSMutableArray *propertyList = [NSMutableArray arrayWithCapacity:numberOfProperties];
-	for (int idx = 0; idx < numberOfProperties; idx++) {
-		objc_property_t property = propertyTypes[idx];
-		[propertyList addObject:[NSString stringWithUTF8String:property_getName(property)]];
-	}
-    
-	free(propertyTypes);
-    return propertyList;
-}
-
-+ (NSString *)remotePropertyNameForLocalPropertyName:(NSString *)localPropertyName {
-    NSString *unLlamad = [[NSValueTransformer valueTransformerForName:TTTLlamaCaseStringTransformerName]
-                          reverseTransformedValue:localPropertyName];
-    return [[NSValueTransformer valueTransformerForName:TTTSnakeCaseStringTransformerName] transformedValue:unLlamad];
-}
 
 + (BOOL)property:(NSString *)propertyName isReadOnlyForClass:(Class)klass {
     const char *type = property_getAttributes(class_getProperty(klass, [propertyName UTF8String]));

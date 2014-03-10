@@ -8,7 +8,7 @@
 @interface BDKUntappdModel : NSObject <NSCoding>
 
 @property (strong, nonatomic) NSString *identifier;
-@property (readonly, strong, nonatomic) NSString *remoteIdentifierName;
+@property (readonly, strong, nonatomic) NSDictionary *remoteMappings;
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary;
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter;
