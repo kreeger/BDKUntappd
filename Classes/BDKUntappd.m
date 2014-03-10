@@ -18,6 +18,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 
 - (NSDictionary *)authorizationParams;
 - (NSDictionary *)authorizationParamsWithParams:(NSDictionary *)params;
+- (void)handleError:(NSError *)error forTask:(NSURLSessionDataTask *)task completion:(BDKUntappdResultBlock)completion;
 
 @end
 
@@ -65,7 +66,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
         }
         completion(responseObject, nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        completion(nil, error);
+        [self handleError:error forTask:task completion:completion];
     }];
 }
 
@@ -88,10 +89,9 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     params = [self authorizationParamsWithParams:params];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
-        NSArray *checkins = [self.parser checkinsFromResponseObject:responseObject];
-        completion(checkins, nil);
+        completion([self.parser checkinsFromResponseObject:responseObject], nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        completion(nil, error);
+        [self handleError:error forTask:task completion:completion];
     }];
 }
 
@@ -113,6 +113,14 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
         merge[key] = obj;
     }];
     return [merge copy];
+}
+
+- (void)handleError:(NSError *)error forTask:(NSURLSessionDataTask *)task completion:(BDKUntappdResultBlock)completion {
+    NSLog(@"API ERROR. %@", [error localizedDescription]);
+    
+    if (completion) {
+        completion(nil, error);
+    }
 }
 
 @end

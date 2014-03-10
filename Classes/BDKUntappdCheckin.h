@@ -7,7 +7,7 @@
 
 #import "BDKUntappdModel.h"
 
-@class BDKUntappdBeer, BDKUntappdBrewery, BDKUntappdUser;
+@class BDKUntappdBeer, BDKUntappdBrewery, BDKUntappdUser, BDKUntappdVenue;
 
 @interface BDKUntappdCheckin : BDKUntappdModel
 
@@ -21,6 +21,6 @@
 @property (strong, nonatomic) NSDictionary *source;
 @property (strong, nonatomic) NSArray *toasts;
 @property (strong, nonatomic) BDKUntappdUser *user;
-@property (strong, nonatomic) NSDictionary *venue;
+@property (strong, nonatomic) BDKUntappdVenue *venue;
 
 @end

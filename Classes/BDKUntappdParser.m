@@ -31,6 +31,7 @@
     NSMutableArray *objects = [NSMutableArray array];
     [responseObject[@"response"][@"checkins"][@"items"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [objects addObject:[BDKUntappdCheckin modelWithDictionary:obj dateFormatter:df]];
+        NSLog(@"--- Parsed.");
     }];
     NSLog(@"Parsed %i objects.", [objects count]);
     return [objects copy];

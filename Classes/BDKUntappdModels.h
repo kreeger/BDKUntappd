@@ -3,3 +3,4 @@
 #import "BDKUntappdBrewery.h"
 #import "BDKUntappdCheckin.h"
 #import "BDKUntappdUser.h"
+#import "BDKUntappdVenue.h"
