@@ -10,6 +10,11 @@
 
 typedef void (^BDKUntappdResultBlock)(id responseObject, NSError *error);
 
+typedef NS_ENUM(NSInteger, BDKUntappdSortType) {
+    BDKUntappdSortTypeAlphabetical,
+    BDKUntappdSortTypeCheckinCount
+};
+
 extern NSString * const BDKUntappdBaseURL;
 
 @class BDKUntappdParser;
@@ -40,6 +45,7 @@ extern NSString * const BDKUntappdBaseURL;
                     clientSecret:(NSString *)clientSecret
                      redirectUrl:(NSString *)redirectUrl;
 
+
 #pragma mark - Authentication
 
 /**
@@ -57,6 +63,7 @@ extern NSString * const BDKUntappdBaseURL;
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
 - (void)authorizeForAccessCode:(NSString *)accessCode completion:(BDKUntappdResultBlock)completion;
+
 
 #pragma mark - Checkin feeds
 
@@ -161,5 +168,142 @@ extern NSString * const BDKUntappdBaseURL;
                      limit:(NSInteger)limit
                 completion:(BDKUntappdResultBlock)completion;
 
+
+#pragma mark - Object detail calls
+
+/**
+ Gets information for a given brewery.
+ 
+ @discussion See https://untappd.com/api/docs#brewery_info
+ 
+ @param breweryID Required; the brewery ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+                be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)infoForBrewery:(NSNumber *)breweryID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Gets information for a given beer.
+ 
+ @discussion See https://untappd.com/api/docs#beer_info
+ 
+ @param beerID Required; the beer ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+                be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)infoForBeer:(NSNumber *)beerID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Gets information for a given venue.
+ 
+ @discussion See https://untappd.com/api/docs#venue_info
+ 
+ @param venueID Required; the venue ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+                be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)infoForVenue:(NSNumber *)venueID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Gets information for a given checkin.
+ 
+ @discussion See https://untappd.com/api/docs#details
+ 
+ @param checkinID Required; the checkin ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+                be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)infoForCheckin:(NSNumber *)checkinID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Gets information for a given user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ 
+ @discussion See https://untappd.com/api/docs#user_info
+ 
+ @param userID Required; the user ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+ be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)infoForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+
+#pragma mark - User detail calls
+
+/**
+ Gets badges for a given user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ 
+ @discussion See https://untappd.com/api/docs#user_info
+ 
+ @param userID Required; the user ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+ be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)badgesForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Gets friends for a given user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ 
+ @discussion See https://untappd.com/api/docs#friends
+ 
+ @param userID Required; the user ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+ be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)friendsForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Gets the wish list for a given user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ 
+ @discussion See https://untappd.com/api/docs#wish_list
+ 
+ @param userID Required; the user ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+ be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)wishListForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Gets a list of distinct beers for a user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ 
+ @discussion See https://untappd.com/api/docs#user_distinct
+ 
+ @param userID Required; the user ID for which to retrieve a information.
+ @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
+ be returned.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)distinctBeersForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+
+#pragma mark - Search calls
+
+/**
+ Searches the Untappd database for a brewery (or breweries) matching a provided search term.
+
+ @discussion See https://untappd.com/api/docs#brewery_search
+ 
+ @param query Required; will be matched against Untappd's list of breweries.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)searchForBrewery:(NSString *)query completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Searches the Untappd database for a beer (or beers) matching a provided search term. Allows for sorting by name or by
+ checkin count.
+ 
+ @discussion See https://untappd.com/api/docs#beer_search
+ 
+ @param query Required; will be matched against Untappd's list of beers.
+ @param sortBy Required; either BDKUntappdSortTypeAlphabetical (the default) or BDKUntappdSortTypeCheckinCount.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)searchForBeer:(NSString *)query sortBy:(BDKUntappdSortType)sortBy completion:(BDKUntappdResultBlock)completion;
 
 @end
