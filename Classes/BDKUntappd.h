@@ -213,23 +213,21 @@ extern NSString * const BDKUntappdBaseURL;
  @discussion See https://untappd.com/api/docs#details
  
  @param checkinID Required; the checkin ID for which to retrieve a information.
- @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
-                be returned.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)infoForCheckin:(NSNumber *)checkinID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)infoForCheckin:(NSNumber *)checkinID completion:(BDKUntappdResultBlock)completion;
 
 /**
- Gets information for a given user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ Gets information for a given user. If username is nil, info for the currently-logged-in user will be retrieved.
  
  @discussion See https://untappd.com/api/docs#user_info
  
- @param userID Required; the user ID for which to retrieve a information.
+ @param username Required; the username for which to retrieve a information.
  @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
  be returned.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)infoForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)infoForUser:(NSString *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
 
 
 #pragma mark - User detail calls
@@ -282,7 +280,7 @@ extern NSString * const BDKUntappdBaseURL;
  */
 - (void)distinctBeersForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
 
-#pragma mark - Search calls
+#pragma mark - Search and trending calls
 
 /**
  Searches the Untappd database for a brewery (or breweries) matching a provided search term.
@@ -305,5 +303,15 @@ extern NSString * const BDKUntappdBaseURL;
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
 - (void)searchForBeer:(NSString *)query sortBy:(BDKUntappdSortType)sortBy completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Gets a list of trending beers globally.
+ 
+ @discussion See https://untappd.com/api/docs#trending
+ 
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)trendingBeers:(BDKUntappdResultBlock)completion;
+
 
 @end
