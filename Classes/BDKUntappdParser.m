@@ -1,9 +1,5 @@
 //
 //  BDKUntappdParser.m
-//  Pods
-//
-//  Created by Ben Kreeger on 3/9/14.
-//
 //
 
 #import "BDKUntappdParser.h"
@@ -33,7 +29,7 @@
         [objects addObject:[BDKUntappdCheckin modelWithDictionary:obj dateFormatter:df]];
         NSLog(@"--- Parsed.");
     }];
-    NSLog(@"Parsed %i objects.", [objects count]);
+    NSLog(@"Parsed %lu objects.", (unsigned long)[objects count]);
     return [objects copy];
 }
 

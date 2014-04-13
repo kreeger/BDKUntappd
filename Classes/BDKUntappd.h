@@ -58,29 +58,108 @@ extern NSString * const BDKUntappdBaseURL;
  */
 - (void)authorizeForAccessCode:(NSString *)accessCode completion:(BDKUntappdResultBlock)completion;
 
-#pragma mark - User data
+#pragma mark - Checkin feeds
 
 /**
- Gets the latest checkins for a particular user. You may omit the username; if so, the current user's checkins will be
- retrieved.
+ Gets the latest checkins for the currently-logged-in user's friends.
  
- @param username The username of the user for which to retrieve checkins.
+ @discussion See https://untappd.com/api/docs#feed
+ 
+ @param maxID The checkin ID that you want results to start with. Optional.
+ @param limit The number of results to return; if set to 0, default value of 25 will be used.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)checkinsForUser:(NSString *)username completion:(BDKUntappdResultBlock)completion;
+- (void)checkinsForFriendsWithMaxID:(NSNumber *)maxID
+                              limit:(NSInteger)limit
+                         completion:(BDKUntappdResultBlock)completion;
 
 /**
  Gets the latest checkins for a particular user. You may omit the username; if so, the current user's checkins will be
  retrieved.
  
+ @discussion See https://untappd.com/api/docs#user_feed
+ 
  @param username The username of the user for which to retrieve checkins.
- @param maxId The checkin ID that you want results to start wtih.
+ @param maxID The checkin ID that you want results to start with. Optional.
  @param limit The number of results to return; if set to 0, default value of 25 will be used.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
 - (void)checkinsForUser:(NSString *)username
-                  maxId:(NSNumber *)maxId
+                  maxID:(NSNumber *)maxID
                   limit:(NSInteger)limit
              completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Retrieves nearby user checkins for a given set of coordinates and radius.
+ 
+ @discussion See https://untappd.com/api/docs#thepublocal
+ 
+ @param latitude The latitude of the coordinate set. Optional (set to 0 if not desired).
+ @param longitude The longitude of the coordinate set. Optional (set to 0 if not desired).
+ @param radius The search radius to use. Optional (set to 0 if not desired).
+ @param minID The minimum checkin ID for which to retrieve checkin data. Optional.
+ @param maxID The maximum checkin ID for which to retrieve checkin data. Optional.
+ @param limit The number of results to return; if set to 0, default value of 25 will be used.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)publicFeedForLatitude:(float)latitude
+                    longitude:(float)longitude
+                       radius:(NSInteger)radius
+                        minID:(NSNumber *)minID
+                        maxID:(NSNumber *)maxID
+                        limit:(NSInteger)limit
+                   completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Retrieves checkins for a given venue.
+ 
+ @discussion See https://untappd.com/api/docs#venue_checkins
+ 
+ @param venueID Required; the venue ID for which to retrieve checkins.
+ @param minID The minimum checkin ID for which to retrieve checkin data. Optional.
+ @param maxID The maximum checkin ID for which to retrieve checkin data. Optional.
+ @param limit The number of results to return; if set to 0, default value of 25 will be used.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)checkinsForVenue:(NSNumber *)venueID
+                   minID:(NSNumber *)minID
+                   maxID:(NSNumber *)maxID
+                   limit:(NSInteger)limit
+              completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Retrieves checkins for a given beer.
+ 
+ @discussion See https://untappd.com/api/docs#beer_checkins
+ 
+ @param beerID Required; the beer ID for which to retrieve checkins.
+ @param minID The minimum checkin ID for which to retrieve checkin data. Optional.
+ @param maxID The maximum checkin ID for which to retrieve checkin data.
+ @param limit The number of results to return; if set to 0, default value of 25 will be used.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)checkinsForBeer:(NSNumber *)beerID
+                  minID:(NSNumber *)minID
+                  maxID:(NSNumber *)maxID
+                  limit:(NSInteger)limit
+             completion:(BDKUntappdResultBlock)completion;
+
+/**
+ Retrieves checkins for a given brewery.
+ 
+ @discussion See https://untappd.com/api/docs#brewery_checkins
+ 
+ @param beerID Required; the beer ID for which to retrieve checkins.
+ @param minID The minimum checkin ID for which to retrieve checkin data. Optional.
+ @param maxID The maximum checkin ID for which to retrieve checkin data.
+ @param limit The number of results to return; if set to 0, default value of 25 will be used.
+ @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
+ */
+- (void)checkinsForBrewery:(NSNumber *)breweryID
+                     minID:(NSNumber *)minID
+                     maxID:(NSNumber *)maxID
+                     limit:(NSInteger)limit
+                completion:(BDKUntappdResultBlock)completion;
+
 
 @end

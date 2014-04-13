@@ -1,7 +1,5 @@
 //
 //  BDKUntappdModel.m
-//
-//  Created by Ben Kreeger on 3/4/14.
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
@@ -171,7 +169,7 @@ static const char *property_getTypeName(objc_property_t property) {
 }
 
 + (Class)classForPropertyName:(NSString *)propertyName inClass:(Class)klass {
-	int numberOfProperties = 0;
+	uint numberOfProperties = 0;
 	objc_property_t *propertyTypes = class_copyPropertyList(klass, &numberOfProperties);
 	const char *cPropertyName = [propertyName UTF8String];
     
