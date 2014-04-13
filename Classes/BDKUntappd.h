@@ -233,52 +233,52 @@ extern NSString * const BDKUntappdBaseURL;
 #pragma mark - User detail calls
 
 /**
- Gets badges for a given user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ Gets badges for a given user.
  
  @discussion See https://untappd.com/api/docs#user_info
  
- @param userID Required; the user ID for which to retrieve a information.
+ @param username Required; the username for which to retrieve a information.
  @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
  be returned.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)badgesForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)badgesForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
 
 /**
- Gets friends for a given user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ Gets friends for a given user.
  
  @discussion See https://untappd.com/api/docs#friends
  
- @param userID Required; the user ID for which to retrieve a information.
+ @param username Required; the username for which to retrieve a information.
  @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
  be returned.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)friendsForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)friendsForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
 
 /**
- Gets the wish list for a given user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ Gets the wish list for a given user.
  
  @discussion See https://untappd.com/api/docs#wish_list
  
- @param userID Required; the user ID for which to retrieve a information.
+ @param username Required; the username for which to retrieve a information.
  @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
  be returned.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)wishListForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)wishListForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
 
 /**
- Gets a list of distinct beers for a user. If userID is nil, info for the currently-logged-in user will be retrieved.
+ Gets a list of distinct beers for a user.
  
  @discussion See https://untappd.com/api/docs#user_distinct
  
- @param userID Required; the user ID for which to retrieve a information.
+ @param username Required; the username for which to retrieve a information.
  @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
  be returned.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)distinctBeersForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)distinctBeersForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
 
 #pragma mark - Search and trending calls
 

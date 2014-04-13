@@ -211,7 +211,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)infoForVenue:(NSNumber *)venueID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!venueID, @"A venue ID must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/venue/info/%@", beerID];
+    NSString *url = [NSString stringWithFormat:@"/v4/venue/info/%@", venueID];
     NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"compact": BDKStringFromBOOL(compact)}];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -250,20 +250,56 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 
 #pragma mark - User detail calls
 
-- (void)badgesForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+- (void)badgesForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!username, @"A username must be supplied.");
     
+    NSString *url = [NSString stringWithFormat:@"/v4/user/badges/%@", username];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser badgesFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
 }
 
-- (void)friendsForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+- (void)friendsForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!username, @"A username must be supplied.");
     
+    NSString *url = [NSString stringWithFormat:@"/v4/user/friends/%@", username];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser usersFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
 }
 
-- (void)wishListForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+- (void)wishListForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!username, @"A username must be supplied.");
     
+    NSString *url = [NSString stringWithFormat:@"/v4/user/wishlist/%@", username];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser beersFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
 }
 
-- (void)distinctBeersForUser:(NSNumber *)userID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+- (void)distinctBeersForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!username, @"A username must be supplied.");
     
+    NSString *url = [NSString stringWithFormat:@"/v4/user/beers/%@", username];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser beersFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
 }
 
 

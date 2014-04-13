@@ -1,8 +1,5 @@
 //
-//  BDKAppDelegate.h
-//  BDKUntappd
-//
-//  Created by Ben Kreeger on 3/4/14.
+//  BDKUntappd // BDKAppDelegate.h
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 

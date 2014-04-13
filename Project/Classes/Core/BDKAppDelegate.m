@@ -1,17 +1,15 @@
 //
-//  BDKAppDelegate.m
-//  BDKUntappd
-//
-//  Created by Ben Kreeger on 3/4/14.
+//  BDKUntappd // BDKAppDelegate.m
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
 #import "BDKAppDelegate.h"
 
 #import "BDKAuthViewController.h"
-#import "BDKBeersViewController.h"
+#import "BDKDumbListViewController.h"
 
 #import <BDKUntappd/BDKUntappd.h>
+#import <BDKUntappd/BDKUntappdModels.h>
 
 @interface BDKAppDelegate () <BDKAuthViewControllerDelegate>
 
@@ -63,7 +61,7 @@
 }
 
 - (void)showLoginFlow {
-    BDKAuthViewController *webVC = [BDKAuthViewController new];
+    BDKAuthViewController *webVC = [[BDKAuthViewController alloc] init];
     webVC.request = [self.untappd authenticationURLRequest];
     webVC.redirectUrl = self.untappd.redirectUrl;
     webVC.delegate = self;
@@ -73,9 +71,48 @@
 }
 
 - (void)showBeersFlow {
-    BDKBeersViewController *beersVC = [BDKBeersViewController new];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:beersVC];
-    self.window.rootViewController = nav;
+    BDKDumbListViewController *workingListVC = [[BDKDumbListViewController alloc] init];
+    workingListVC.title = @"Checkins for Conrads";
+    [workingListVC setRefreshBlock:^(void(^whenFinished)(NSArray *results)) {
+        [self.untappd checkinsForVenue:@123972 minID:nil maxID:nil limit:10 completion:^(id responseObject, NSError *error) {
+            whenFinished(responseObject);
+        }];
+    }];
+    [workingListVC setCellDisplayBlock:^(BDKUntappdCheckin *checkin, UITableViewCell *cell) {
+        cell.textLabel.text = checkin.beer.name;
+        cell.detailTextLabel.text = [checkin.user fullName];
+    }];
+    UINavigationController *workingNav = [[UINavigationController alloc] initWithRootViewController:workingListVC];
+    
+    BDKDumbListViewController *checkinVC = [[BDKDumbListViewController alloc] init];
+    checkinVC.title = @"My Checkins";
+    [checkinVC setRefreshBlock:^(void(^whenFinished)(NSArray *results)) {
+       [self.untappd checkinsForUser:nil maxID:nil limit:10 completion:^(id responseObject, NSError *error) {
+           whenFinished(responseObject);
+       }];
+    }];
+    [checkinVC setCellDisplayBlock:^(BDKUntappdCheckin *checkin, UITableViewCell *cell) {
+        cell.textLabel.text = checkin.beer.name;
+        cell.detailTextLabel.text = checkin.brewery.name;
+    }];
+    UINavigationController *checkinNav = [[UINavigationController alloc] initWithRootViewController:checkinVC];
+    
+    BDKDumbListViewController *friendsVC = [[BDKDumbListViewController alloc] init];
+    friendsVC.title = @"Friends' Checkins";
+    [friendsVC setRefreshBlock:^(void(^whenFinished)(NSArray *results)){
+        [self.untappd checkinsForFriendsWithMaxID:nil limit:10 completion:^(id responseObject, NSError *error) {
+            whenFinished(responseObject);
+        }];
+    }];
+    [friendsVC setCellDisplayBlock:^(BDKUntappdCheckin *checkin, UITableViewCell *cell) {
+        cell.textLabel.text = checkin.beer.name;
+        cell.detailTextLabel.text = [checkin.user fullName];
+    }];
+    UINavigationController *friendNav = [[UINavigationController alloc] initWithRootViewController:friendsVC];
+    
+    UITabBarController *tabVC = [[UITabBarController alloc] init];
+    tabVC.viewControllers = @[workingNav, checkinNav, friendNav];
+    self.window.rootViewController = tabVC;
 }
 
 #pragma mark - BDKAuthViewControllerDelegate

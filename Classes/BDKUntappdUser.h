@@ -24,4 +24,6 @@
 @property (strong, nonatomic) NSURL *userAvatar;
 @property (strong, nonatomic) NSString *userName;
 
+- (NSString *)fullName;
+
 @end

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5A30006FFBA048E490A8E30B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA7BFFBD12248179250BA88 /* libPods.a */; };
+		B51158FF18FB1BD8009AFF5B /* BDKTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B51158FE18FB1BD8009AFF5B /* BDKTableViewCell.m */; };
 		B518905818C6BC7200C80BE0 /* BDKAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B518904F18C6BC7200C80BE0 /* BDKAppDelegate.m */; };
 		B518905918C6BC7200C80BE0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B518905018C6BC7200C80BE0 /* main.m */; };
 		B518905A18C6BC7200C80BE0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B518905418C6BC7200C80BE0 /* InfoPlist.strings */; };
@@ -16,7 +17,7 @@
 		B518906D18C6BCFF00C80BE0 /* BDKUntappdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B518906C18C6BCFF00C80BE0 /* BDKUntappdTests.m */; };
 		B5DB308718C6C62100CCF3E2 /* BDKAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308618C6C62100CCF3E2 /* BDKAuthViewController.m */; };
 		B5DB308918C6C93900CCF3E2 /* BDKUntappdSecrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = B5DB308818C6C93900CCF3E2 /* BDKUntappdSecrets.plist */; };
-		B5DB308C18C6CEB400CCF3E2 /* BDKBeersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308B18C6CEB400CCF3E2 /* BDKBeersViewController.m */; };
+		B5DB308C18C6CEB400CCF3E2 /* BDKDumbListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308B18C6CEB400CCF3E2 /* BDKDumbListViewController.m */; };
 		B5DB309018C6D44100CCF3E2 /* UIViewController+BDKUntappd.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308F18C6D44100CCF3E2 /* UIViewController+BDKUntappd.m */; };
 		B5DEC1E318C6BA30007F9B49 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5DEC1E218C6BA30007F9B49 /* Foundation.framework */; };
 		B5DEC1E518C6BA30007F9B49 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5DEC1E418C6BA30007F9B49 /* CoreGraphics.framework */; };
@@ -38,6 +39,8 @@
 
 /* Begin PBXFileReference section */
 		AAA7BFFBD12248179250BA88 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B51158FD18FB1BD8009AFF5B /* BDKTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDKTableViewCell.h; sourceTree = "<group>"; };
+		B51158FE18FB1BD8009AFF5B /* BDKTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDKTableViewCell.m; sourceTree = "<group>"; };
 		B518904E18C6BC7200C80BE0 /* BDKAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDKAppDelegate.h; sourceTree = "<group>"; };
 		B518904F18C6BC7200C80BE0 /* BDKAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDKAppDelegate.m; sourceTree = "<group>"; };
 		B518905018C6BC7200C80BE0 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -52,8 +55,8 @@
 		B5DB308518C6C62100CCF3E2 /* BDKAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDKAuthViewController.h; sourceTree = "<group>"; };
 		B5DB308618C6C62100CCF3E2 /* BDKAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDKAuthViewController.m; sourceTree = "<group>"; };
 		B5DB308818C6C93900CCF3E2 /* BDKUntappdSecrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BDKUntappdSecrets.plist; sourceTree = "<group>"; };
-		B5DB308A18C6CEB400CCF3E2 /* BDKBeersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDKBeersViewController.h; sourceTree = "<group>"; };
-		B5DB308B18C6CEB400CCF3E2 /* BDKBeersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDKBeersViewController.m; sourceTree = "<group>"; };
+		B5DB308A18C6CEB400CCF3E2 /* BDKDumbListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDKDumbListViewController.h; sourceTree = "<group>"; };
+		B5DB308B18C6CEB400CCF3E2 /* BDKDumbListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDKDumbListViewController.m; sourceTree = "<group>"; };
 		B5DB308E18C6D44100CCF3E2 /* UIViewController+BDKUntappd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+BDKUntappd.h"; sourceTree = "<group>"; };
 		B5DB308F18C6D44100CCF3E2 /* UIViewController+BDKUntappd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+BDKUntappd.m"; sourceTree = "<group>"; };
 		B5DEC1DF18C6BA30007F9B49 /* BDKUntappd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BDKUntappd.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,10 +93,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B51158FC18FB1BCB009AFF5B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B51158FD18FB1BD8009AFF5B /* BDKTableViewCell.h */,
+				B51158FE18FB1BD8009AFF5B /* BDKTableViewCell.m */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		B518904C18C6BC7200C80BE0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				B5DB308D18C6D43600CCF3E2 /* Categories */,
+				B51158FC18FB1BCB009AFF5B /* Cells */,
 				B518904D18C6BC7200C80BE0 /* Core */,
 				B518905218C6BC7200C80BE0 /* ViewControllers */,
 			);
@@ -116,8 +129,8 @@
 			children = (
 				B5DB308518C6C62100CCF3E2 /* BDKAuthViewController.h */,
 				B5DB308618C6C62100CCF3E2 /* BDKAuthViewController.m */,
-				B5DB308A18C6CEB400CCF3E2 /* BDKBeersViewController.h */,
-				B5DB308B18C6CEB400CCF3E2 /* BDKBeersViewController.m */,
+				B5DB308A18C6CEB400CCF3E2 /* BDKDumbListViewController.h */,
+				B5DB308B18C6CEB400CCF3E2 /* BDKDumbListViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -326,9 +339,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5DB308C18C6CEB400CCF3E2 /* BDKBeersViewController.m in Sources */,
+				B5DB308C18C6CEB400CCF3E2 /* BDKDumbListViewController.m in Sources */,
 				B5DB308718C6C62100CCF3E2 /* BDKAuthViewController.m in Sources */,
 				B518905918C6BC7200C80BE0 /* main.m in Sources */,
+				B51158FF18FB1BD8009AFF5B /* BDKTableViewCell.m in Sources */,
 				B5DB309018C6D44100CCF3E2 /* UIViewController+BDKUntappd.m in Sources */,
 				B518905818C6BC7200C80BE0 /* BDKAppDelegate.m in Sources */,
 			);

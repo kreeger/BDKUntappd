@@ -85,9 +85,10 @@ static const char *property_getTypeName(objc_property_t property) {
             NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[valuesForVal count]];
             [valuesForVal enumerateObjectsUsingBlock:^(id subVal, NSUInteger idx, BOOL *stop) {
                 if ([[subVal class] isSubclassOfClass:[NSDictionary class]]) {
-                    SEL classSelector = NSSelectorFromString([NSString stringWithFormat:@"%@_class", propertyName]);
-                    if ([self respondsToSelector:classSelector]) {
-                        Class klass = [self performSelector:classSelector];
+                    SEL classTypeSelector = NSSelectorFromString([NSString stringWithFormat:@"%@_class", propertyName]);
+                    if ([self respondsToSelector:classTypeSelector]) {
+                        Class (*func)(id, SEL) = (void *)[self methodForSelector:classTypeSelector];
+                        Class klass = func(self, classTypeSelector);
                         if ([klass isSubclassOfClass:[BDKUntappdModel class]]) {
                             BDKUntappdModel *model = [[klass alloc] initWithDictionary:subVal];
                             [objects addObject:model];
@@ -158,6 +159,17 @@ static const char *property_getTypeName(objc_property_t property) {
     [[self.remoteMappings allKeys] enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
 		[aCoder encodeObject:[self valueForKey:key] forKey:key];
     }];
+}
+
+#pragma mark - NSCopying
+
+- (instancetype)copyWithZone:(NSZone *)zone {
+    typeof(self) copy = [[[self class] alloc] init];
+    if (!copy) return nil;
+    [[self.remoteMappings allKeys] enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+        [self setValue:[[self valueForKey:key] copyWithZone:zone] forKey:key];
+    }];
+    return copy;
 }
 
 #pragma mark - Private methods

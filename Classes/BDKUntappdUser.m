@@ -29,6 +29,12 @@
              @"userName": @"user_name",};
 }
 
+#pragma mark - Methods
+
+- (NSString *)fullName {
+    return [@[self.firstName, self.lastName] componentsJoinedByString:@" "];
+}
+
 #pragma mark - NSObject
 
 - (NSString *)description {
