@@ -7,9 +7,9 @@
 
 #import "BDKAuthViewController.h"
 #import "BDKDumbListViewController.h"
+#import "BDKSearchViewController.h"
 
 #import <BDKUntappd/BDKUntappd.h>
-#import <BDKUntappd/BDKUntappdModels.h>
 
 @interface BDKAppDelegate () <BDKAuthViewControllerDelegate>
 
@@ -71,16 +71,17 @@
 }
 
 - (void)showBeersFlow {
-    BDKDumbListViewController *workingListVC = [[BDKDumbListViewController alloc] init];
-    workingListVC.title = @"Checkins for Conrads";
-    [workingListVC setRefreshBlock:^(void(^whenFinished)(NSArray *results)) {
-        [self.untappd checkinsForVenue:@123972 minID:nil maxID:nil limit:10 completion:^(id responseObject, NSError *error) {
+    BDKSearchViewController *workingListVC = [[BDKSearchViewController alloc] init];
+    workingListVC.title = @"Brewery Search";
+    [workingListVC setAlertTitle:@"Brewery Search" description:@"Search for a brewery:"];
+    [workingListVC setPerformSearchBlock:^(NSString *query, void(^whenFinished)(NSArray *results)) {
+        [self.untappd searchForBrewery:query completion:^(id responseObject, NSError *error) {
             whenFinished(responseObject);
         }];
     }];
-    [workingListVC setCellDisplayBlock:^(BDKUntappdCheckin *checkin, UITableViewCell *cell) {
-        cell.textLabel.text = checkin.beer.name;
-        cell.detailTextLabel.text = [checkin.user fullName];
+    [workingListVC setCellDisplayBlock:^(BDKUntappdBrewery *brewery, UITableViewCell *cell) {
+        cell.textLabel.text = brewery.name;
+        cell.detailTextLabel.text = brewery.locationDisplay;
     }];
     UINavigationController *workingNav = [[UINavigationController alloc] initWithRootViewController:workingListVC];
     

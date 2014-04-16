@@ -1,12 +1,11 @@
 //
 //  BDKUntappd.h
-//
-//  Created by Ben Kreeger on 3/4/14.
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
 @import Foundation;
 #import <AFNetworking/AFHTTPSessionManager.h>
+#import "BDKUntappdModels.h"
 
 typedef void (^BDKUntappdResultBlock)(id responseObject, NSError *error);
 

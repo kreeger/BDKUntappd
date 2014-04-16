@@ -10,6 +10,13 @@
 @property (strong, nonatomic) NSCache *dfCache;
 
 - (NSDateFormatter *)dateFormatterForFormat:(NSString *)format;
+- (NSArray *)resultsFromResponseObject:(NSDictionary *)responseObject
+                               ofClass:(Class)objectClass
+                           withKeyPath:(NSString *)keypath;
+- (NSArray *)resultsFromResponseObject:(NSDictionary *)responseObject
+                               ofClass:(Class)objectClass
+                           withKeyPath:(NSString *)keypath
+                        objectNodeName:(NSString *)objectNodeName;
 
 @end
 
@@ -23,14 +30,9 @@
 }
 
 - (NSArray *)checkinsFromResponseObject:(id)responseObject {
-    NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    NSMutableArray *objects = [NSMutableArray array];
-    [responseObject[@"response"][@"checkins"][@"items"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [objects addObject:[BDKUntappdCheckin modelWithDictionary:obj dateFormatter:df]];
-        NSLog(@"--- Parsed.");
-    }];
-    NSLog(@"Parsed %lu objects.", (unsigned long)[objects count]);
-    return [objects copy];
+    return [self resultsFromResponseObject:responseObject
+                                   ofClass:[BDKUntappdCheckin class]
+                               withKeyPath:@"response.checkins.items"];
 }
 
 - (BDKUntappdCheckin *)checkinFromResponseObject:(id)responseObject {
@@ -39,14 +41,9 @@
 }
 
 - (NSArray *)beersFromResponseObject:(id)responseObject {
-    NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    NSMutableArray *objects = [NSMutableArray array];
-    [responseObject[@"response"][@"beers"][@"items"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [objects addObject:[BDKUntappdBeer modelWithDictionary:obj dateFormatter:df]];
-        NSLog(@"--- Parsed.");
-    }];
-    NSLog(@"Parsed %lu objects.", (unsigned long)[objects count]);
-    return [objects copy];
+    return [self resultsFromResponseObject:responseObject
+                                   ofClass:[BDKUntappdBeer class]
+                               withKeyPath:@"response.beers.items"];
 }
 
 - (BDKUntappdBeer *)beerFromResponseObject:(id)responseObject {
@@ -55,20 +52,22 @@
 
 }
 
+- (NSArray *)breweriesFromResponseObject:(id)responseObject {
+    return [self resultsFromResponseObject:responseObject
+                                   ofClass:[BDKUntappdBrewery class]
+                               withKeyPath:@"response.brewery.items"
+                            objectNodeName:@"brewery"];
+}
+
 - (BDKUntappdBrewery *)breweryFromResponseObject:(id)responseObject {
     NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
     return [BDKUntappdBrewery modelWithDictionary:responseObject[@"brewery"] dateFormatter:df];
 }
 
 - (NSArray *)usersFromResponseObject:(id)responseObject {
-    NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    NSMutableArray *objects = [NSMutableArray array];
-    [responseObject[@"response"][@"items"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [objects addObject:[BDKUntappdUser modelWithDictionary:obj dateFormatter:df]];
-        NSLog(@"--- Parsed.");
-    }];
-    NSLog(@"Parsed %lu objects.", (unsigned long)[objects count]);
-    return [objects copy];
+    return [self resultsFromResponseObject:responseObject
+                                   ofClass:[BDKUntappdUser class]
+                               withKeyPath:@"response.items"];
 }
 
 - (BDKUntappdUser *)userFromResponseObject:(id)responseObject {
@@ -82,14 +81,9 @@
 }
 
 - (NSArray *)badgesFromResponseObject:(id)responseObject {
-    NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    NSMutableArray *objects = [NSMutableArray array];
-    [responseObject[@"response"][@"items"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [objects addObject:[BDKUntappdVenue modelWithDictionary:obj dateFormatter:df]];
-        NSLog(@"--- Parsed.");
-    }];
-    NSLog(@"Parsed %lu objects.", (unsigned long)[objects count]);
-    return [objects copy];
+    return [self resultsFromResponseObject:responseObject
+                                   ofClass:[BDKUntappdVenue class]
+                               withKeyPath:@"response.items"];
 }
 
 #pragma mark - Methods
@@ -102,6 +96,33 @@
     [df setDateFormat:format];
     [self.dfCache setObject:df forKey:format];
     return df;
+}
+
+- (NSArray *)resultsFromResponseObject:(NSDictionary *)responseObject
+                               ofClass:(Class)objectClass
+                           withKeyPath:(NSString *)keypath
+                        objectNodeName:(NSString *)objectNodeName {
+    NSAssert([objectClass isSubclassOfClass:[BDKUntappdModel class]], @"objectClass must be class of BDKUntappdModel.");
+    __block id objectToCrawl = responseObject;
+    [[keypath componentsSeparatedByString:@"."] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        objectToCrawl = objectToCrawl[obj];
+    }];
+    NSAssert([objectToCrawl isKindOfClass:[NSArray class]], @"Resulting object at keypath must be an NSArray.");
+    
+    NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
+    NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[objectToCrawl count]];
+    [objectToCrawl enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+        if (objectNodeName) obj = obj[objectNodeName];
+        id model = [[objectClass alloc] initWithDictionary:obj dateFormatter:df];
+        [objects addObject:model];
+    }];
+    return [objects copy];
+}
+
+- (NSArray *)resultsFromResponseObject:(NSDictionary *)responseObject
+                               ofClass:(Class)objectClass
+                           withKeyPath:(NSString *)keypath {
+    return [self resultsFromResponseObject:responseObject ofClass:objectClass withKeyPath:keypath objectNodeName:nil];
 }
 
 @end

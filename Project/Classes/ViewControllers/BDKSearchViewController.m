@@ -1,25 +1,23 @@
 //
-//  BDKUntappd // BDKBeersViewController.m
+//  BDKUntappd // BDKSearchViewController.m
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
-#import "BDKDumbListViewController.h"
-
-#import "UIViewController+BDKUntappd.h"
+#import "BDKSearchViewController.h"
 
 #import "BDKTableViewCell.h"
 
-#import <BDKUntappd/BDKUntappd.h>
+@interface BDKSearchViewController () <UIAlertViewDelegate>
 
-@interface BDKDumbListViewController ()
-
+@property (strong, nonatomic) UIAlertView *alertView;
+@property (strong, nonatomic) NSString *query;
 @property (strong, nonatomic) NSArray *objects;
 
 - (void)refreshControlPulled:(UIRefreshControl *)control;
 
 @end
 
-@implementation BDKDumbListViewController
+@implementation BDKSearchViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -32,14 +30,29 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.refreshControl beginRefreshing];
-    [self.refreshControl sendActionsForControlEvents:UIControlEventValueChanged];
+    [self.alertView show];
+}
+
+#pragma mark - Methods
+
+- (void)setAlertTitle:(NSString *)title description:(NSString *)description {
+    self.alertView = [[UIAlertView alloc] initWithTitle:title
+                                                message:description
+                                               delegate:self
+                                      cancelButtonTitle:@"Search"
+                                      otherButtonTitles:nil, nil];
+    self.alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
 }
 
 #pragma mark - Private methods
 
 - (void)refreshControlPulled:(UIRefreshControl *)control {
-    self.refreshBlock(^(NSArray *results){
+    if (!self.performSearchBlock) {
+        [control endRefreshing];
+        return;
+    }
+    
+    self.performSearchBlock(self.query, ^(NSArray *results){
         self.objects = results;
         [self.tableView reloadData];
         [control endRefreshing];
@@ -56,6 +69,13 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:BDKTableViewCellID forIndexPath:indexPath];
     self.cellDisplayBlock(self.objects[indexPath.row], cell);
     return cell;
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    self.query = [[alertView textFieldAtIndex:0] text];
+    [self.refreshControl sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 @end

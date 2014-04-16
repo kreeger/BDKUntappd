@@ -14,6 +14,7 @@
 - (NSArray *)beersFromResponseObject:(id)responseObject;
 - (BDKUntappdBeer *)beerFromResponseObject:(id)responseObject;
 
+- (NSArray *)breweriesFromResponseObject:(id)responseObject;
 - (BDKUntappdBrewery *)breweryFromResponseObject:(id)responseObject;
 
 - (NSArray *)usersFromResponseObject:(id)responseObject;

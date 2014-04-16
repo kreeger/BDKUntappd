@@ -15,6 +15,7 @@
 		B518905B18C6BC7200C80BE0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B518905618C6BC7200C80BE0 /* Images.xcassets */; };
 		B518906A18C6BCF500C80BE0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B518906718C6BCF500C80BE0 /* InfoPlist.strings */; };
 		B518906D18C6BCFF00C80BE0 /* BDKUntappdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B518906C18C6BCFF00C80BE0 /* BDKUntappdTests.m */; };
+		B5CD4CC718FEBE4E00A19BE9 /* BDKSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CD4CC618FEBE4E00A19BE9 /* BDKSearchViewController.m */; };
 		B5DB308718C6C62100CCF3E2 /* BDKAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308618C6C62100CCF3E2 /* BDKAuthViewController.m */; };
 		B5DB308918C6C93900CCF3E2 /* BDKUntappdSecrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = B5DB308818C6C93900CCF3E2 /* BDKUntappdSecrets.plist */; };
 		B5DB308C18C6CEB400CCF3E2 /* BDKDumbListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DB308B18C6CEB400CCF3E2 /* BDKDumbListViewController.m */; };
@@ -52,6 +53,8 @@
 		B518906918C6BCF500C80BE0 /* Specs-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Specs-Info.plist"; sourceTree = "<group>"; };
 		B518906C18C6BCFF00C80BE0 /* BDKUntappdTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BDKUntappdTests.m; path = Specs/BDKUntappdTests.m; sourceTree = "<group>"; };
 		B518906E18C6BD2500C80BE0 /* Specs-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Specs-Prefix.pch"; sourceTree = "<group>"; };
+		B5CD4CC518FEBE4E00A19BE9 /* BDKSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDKSearchViewController.h; sourceTree = "<group>"; };
+		B5CD4CC618FEBE4E00A19BE9 /* BDKSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDKSearchViewController.m; sourceTree = "<group>"; };
 		B5DB308518C6C62100CCF3E2 /* BDKAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDKAuthViewController.h; sourceTree = "<group>"; };
 		B5DB308618C6C62100CCF3E2 /* BDKAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDKAuthViewController.m; sourceTree = "<group>"; };
 		B5DB308818C6C93900CCF3E2 /* BDKUntappdSecrets.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BDKUntappdSecrets.plist; sourceTree = "<group>"; };
@@ -131,6 +134,8 @@
 				B5DB308618C6C62100CCF3E2 /* BDKAuthViewController.m */,
 				B5DB308A18C6CEB400CCF3E2 /* BDKDumbListViewController.h */,
 				B5DB308B18C6CEB400CCF3E2 /* BDKDumbListViewController.m */,
+				B5CD4CC518FEBE4E00A19BE9 /* BDKSearchViewController.h */,
+				B5CD4CC618FEBE4E00A19BE9 /* BDKSearchViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -339,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5CD4CC718FEBE4E00A19BE9 /* BDKSearchViewController.m in Sources */,
 				B5DB308C18C6CEB400CCF3E2 /* BDKDumbListViewController.m in Sources */,
 				B5DB308718C6C62100CCF3E2 /* BDKAuthViewController.m in Sources */,
 				B518905918C6BC7200C80BE0 /* main.m in Sources */,

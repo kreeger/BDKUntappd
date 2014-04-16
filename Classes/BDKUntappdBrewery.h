@@ -19,5 +19,6 @@
 @property (strong, nonatomic) NSString *state;
 @property (strong, nonatomic) NSNumber *latitude;
 @property (strong, nonatomic) NSNumber *longitude;
+@property (strong, readonly, nonatomic) NSString *locationDisplay;
 
 @end

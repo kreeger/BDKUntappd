@@ -1,7 +1,5 @@
 //
 //  BDKUntappd.m
-//
-//  Created by Ben Kreeger on 3/4/14.
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
@@ -309,10 +307,10 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     NSAssert(!!query, @"A query must be supplied.");
     
     NSString *url = @"search/brewery";
-    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"q": query}];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
-        completion([self.parser beersFromResponseObject:responseObject], nil);
+        completion([self.parser breweriesFromResponseObject:responseObject], nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self handleError:error forTask:task completion:completion];
     }];

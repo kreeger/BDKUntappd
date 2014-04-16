@@ -1,8 +1,5 @@
 //
-//  BDKAuthViewController.m
-//  BDKUntappd
-//
-//  Created by Ben Kreeger on 3/4/14.
+//  BDKUntappd // BDKAuthViewController.m
 //  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
