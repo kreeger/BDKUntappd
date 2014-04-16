@@ -82,7 +82,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)checkinsForFriendsWithMaxID:(NSNumber *)maxID
                               limit:(NSInteger)limit
                          completion:(BDKUntappdResultBlock)completion {
-    NSString *url = @"/v4/checkin/recent";
+    NSString *url = @"checkin/recent";
     NSMutableDictionary *params = [self requestParamsWithMinID:nil maxID:maxID limit:limit];
 
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -98,7 +98,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
              completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username || !!self.accessToken, @"Either username or a saved access token must be supplied.");
 
-    NSString *url = [NSString stringWithFormat:@"/v4/user/checkins%@%@", username ? @"/" : @"", username ?: @""];
+    NSString *url = [NSString stringWithFormat:@"user/checkins%@%@", username ? @"/" : @"", username ?: @""];
     NSMutableDictionary *params = [self requestParamsWithMinID:nil maxID:maxID limit:limit];
 
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -115,7 +115,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
                         maxID:(NSNumber *)maxID
                         limit:(NSInteger)limit
                    completion:(BDKUntappdResultBlock)completion {
-    NSString *url = @"/v4/thepub/local";
+    NSString *url = @"thepub/local";
     NSMutableDictionary *params = [self requestParamsWithMinID:minID maxID:maxID limit:limit];
     if (latitude > 0) params[@"lat"] = @(latitude);
     if (longitude > 0) params[@"lng"] = @(longitude);
@@ -135,7 +135,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
               completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!venueID, @"A venue ID must be supplied.");
 
-    NSString *url = [NSString stringWithFormat:@"/v4/venue/checkins/%@", venueID];
+    NSString *url = [NSString stringWithFormat:@"venue/checkins/%@", venueID];
     NSMutableDictionary *params = [self requestParamsWithMinID:minID maxID:maxID limit:limit];
 
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -152,7 +152,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
              completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!beerID, @"A beer ID must be supplied.");
 
-    NSString *url = [NSString stringWithFormat:@"/v4/beer/checkins/%@", beerID];
+    NSString *url = [NSString stringWithFormat:@"beer/checkins/%@", beerID];
     NSMutableDictionary *params = [self requestParamsWithMinID:minID maxID:maxID limit:limit];
 
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -169,7 +169,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
                 completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!breweryID, @"A brewery ID must be supplied.");
 
-    NSString *url = [NSString stringWithFormat:@"/v4/brewery/checkins/%@", breweryID];
+    NSString *url = [NSString stringWithFormat:@"brewery/checkins/%@", breweryID];
     NSMutableDictionary *params = [self requestParamsWithMinID:minID maxID:maxID limit:limit];
 
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -185,7 +185,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)infoForBrewery:(NSNumber *)breweryID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!breweryID, @"A brewery ID must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/brewery/info/%@", breweryID];
+    NSString *url = [NSString stringWithFormat:@"brewery/info/%@", breweryID];
     NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"compact": BDKStringFromBOOL(compact)}];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -198,7 +198,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)infoForBeer:(NSNumber *)beerID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!beerID, @"A beer ID must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/beer/info/%@", beerID];
+    NSString *url = [NSString stringWithFormat:@"beer/info/%@", beerID];
     NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"compact": BDKStringFromBOOL(compact)}];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -211,7 +211,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)infoForVenue:(NSNumber *)venueID compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!venueID, @"A venue ID must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/venue/info/%@", venueID];
+    NSString *url = [NSString stringWithFormat:@"venue/info/%@", venueID];
     NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"compact": BDKStringFromBOOL(compact)}];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -224,7 +224,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)infoForCheckin:(NSNumber *)checkinID completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!checkinID, @"A checkin ID must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/checkin/view/%@", checkinID];
+    NSString *url = [NSString stringWithFormat:@"checkin/view/%@", checkinID];
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -237,7 +237,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)infoForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username || !!self.accessToken, @"Either username or a saved access token must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/user/info%@%@", username ? @"/" : @"", username ?: @""];
+    NSString *url = [NSString stringWithFormat:@"user/info%@%@", username ? @"/" : @"", username ?: @""];
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -253,7 +253,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)badgesForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username, @"A username must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/user/badges/%@", username];
+    NSString *url = [NSString stringWithFormat:@"user/badges/%@", username];
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -266,7 +266,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)friendsForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username, @"A username must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/user/friends/%@", username];
+    NSString *url = [NSString stringWithFormat:@"user/friends/%@", username];
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -279,7 +279,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)wishListForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username, @"A username must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/user/wishlist/%@", username];
+    NSString *url = [NSString stringWithFormat:@"user/wishlist/%@", username];
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -292,7 +292,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (void)distinctBeersForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username, @"A username must be supplied.");
     
-    NSString *url = [NSString stringWithFormat:@"/v4/user/beers/%@", username];
+    NSString *url = [NSString stringWithFormat:@"user/beers/%@", username];
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -306,7 +306,16 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 #pragma mark - Search and trending calls
 
 - (void)searchForBrewery:(NSString *)query completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!query, @"A query must be supplied.");
     
+    NSString *url = @"search/brewery";
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser beersFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
 }
 
 - (void)searchForBeer:(NSString *)query sortBy:(BDKUntappdSortType)sortBy completion:(BDKUntappdResultBlock)completion {
