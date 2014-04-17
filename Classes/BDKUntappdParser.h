@@ -12,7 +12,8 @@
 - (BDKUntappdCheckin *)checkinFromResponseObject:(id)responseObject;
 
 - (NSArray *)beersFromResponseObject:(id)responseObject;
-- (NSArray *)beersFromSearchResponseObject:(id)responseObject;
+- (NSArray *)beersAndBreweriesFromResponseObject:(id)responseObject;
+- (NSArray *)beersFromTrendingResponseObject:(id)responseObject;
 - (BDKUntappdBeer *)beerFromResponseObject:(id)responseObject;
 
 - (NSArray *)breweriesFromResponseObject:(id)responseObject;

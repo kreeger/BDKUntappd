@@ -8,9 +8,31 @@
 
 typedef void (^BDKUntappdResultBlock)(id responseObject, NSError *error);
 
-typedef NS_ENUM(NSInteger, BDKUntappdSortType) {
-    BDKUntappdSortTypeAlphabetical,
-    BDKUntappdSortTypeCheckinCount
+//sort (string, optional) - Your can sort the results using these values: date - sorts by date (default), checkin - sorted by highest checkin, highest_rated - sorts by global rating descending order, lowest_rated - sorts by global rating ascending order, highest_abv - highest ABV from the wishlist, lowest_abv - lowest ABV from the wishlist
+
+typedef NS_ENUM(NSInteger, BDKUntappdWishListSortType) {
+    BDKUntappdWishListSortTypeMostRecent,
+    BDKUntappdWishListSortTypeMostCheckins,
+    BDKUntappdWishListSortTypeHighestRated,
+    BDKUntappdWishListSortTypeLowestRated,
+    BDKUntappdWishListSortTypeHighestABV,
+    BDKUntappdWishListSortTypeLowestABV
+};
+
+// sort (string, optional) - Your can sort the results using these values: date - sorts by date (default), checkin - sorted by highest checkin, highest_rated - sorts by global rating descending order, lowest_rated - sorts by global rating ascending order, highest_rated_you - the user's highest rated beer, lowest_rated_you - the user's lowest rated beer
+
+typedef NS_ENUM(NSInteger, BDKUntappdDistinctBeerSortType) {
+    BDKUntappdDistinctBeerSortTypeMostRecent,
+    BDKUntappdDistinctBeerSortTypeMostCheckins,
+    BDKUntappdDistinctBeerSortTypeHighestRated,
+    BDKUntappdDistinctBeerSortTypeLowestRated,
+    BDKUntappdDistinctBeerSortTypeHighestRatedByYou,
+    BDKUntappdDistinctBeerSortTypeLowestRatedByYou
+};
+
+typedef NS_ENUM(NSInteger, BDKUntappdBeerSearchSortType) {
+    BDKUntappdBeerSearchSortTypeAlphabetical,
+    BDKUntappdBeerSearchSortTypeMostCheckins
 };
 
 extern NSString * const BDKUntappdBaseURL;
@@ -231,28 +253,30 @@ extern NSString * const BDKUntappdBaseURL;
 #pragma mark - User detail calls
 
 /**
- Gets badges for a given user.
+ Gets 50 badges for a given user. If username is nil, info for the currently-logged-in user will be retrieved.
  
  @discussion See https://untappd.com/api/docs#user_info
  
  @param username Required; the username for which to retrieve a information.
- @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
- be returned.
+ @param offset The numeric offset from which you what results to start.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)badgesForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)badgesForUser:(NSNumber *)username offset:(NSInteger)offset completion:(BDKUntappdResultBlock)completion;
 
 /**
- Gets friends for a given user.
+ Gets 25 friends for a given user. If username is nil, info for the currently-logged-in user will be retrieved.
  
  @discussion See https://untappd.com/api/docs#friends
  
  @param username Required; the username for which to retrieve a information.
- @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
- be returned.
+ @param offset The numeric offset from which you what results to start.
+ @param limit Limits the number of results returned; maximum of 25.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)friendsForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)friendsForUser:(NSNumber *)username
+                offset:(NSInteger)offset
+                 limit:(NSInteger)limit
+            completion:(BDKUntappdResultBlock)completion;
 
 /**
  Gets the wish list for a given user.
@@ -260,11 +284,14 @@ extern NSString * const BDKUntappdBaseURL;
  @discussion See https://untappd.com/api/docs#wish_list
  
  @param username Required; the username for which to retrieve a information.
- @param compact If `YES`, only basic info is returned; if `NO`, a full object including checkins and a beer list will
- be returned.
+ @param sortBy The method by which you'd like to sort your results.
+ @param offset The numeric offset from which you what results to start.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)wishListForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)wishListForUser:(NSNumber *)username
+                 sortBy:(BDKUntappdWishListSortType)sortBy
+                 offset:(NSInteger)offset
+             completion:(BDKUntappdResultBlock)completion;
 
 /**
  Gets a list of distinct beers for a user.
@@ -276,7 +303,10 @@ extern NSString * const BDKUntappdBaseURL;
  be returned.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)distinctBeersForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion;
+- (void)distinctBeersForUser:(NSNumber *)username
+                      sortBy:(BDKUntappdDistinctBeerSortType)sortBy
+                      offset:(NSInteger)offset
+                  completion:(BDKUntappdResultBlock)completion;
 
 #pragma mark - Search and trending calls
 
@@ -297,10 +327,13 @@ extern NSString * const BDKUntappdBaseURL;
  @discussion See https://untappd.com/api/docs#beer_search
  
  @param query Required; will be matched against Untappd's list of beers.
- @param sortBy Required; either BDKUntappdSortTypeAlphabetical (the default) or BDKUntappdSortTypeCheckinCount.
+ @param sortBy Required; either BDKUntappdBeerSearchSortTypeAlphabetical (the default) or
+               BDKUntappdBeerSearchSortTypeCheckinCount.
  @param completion A block to be called upon completion; will get passed the response body and error if one occurred.
  */
-- (void)searchForBeer:(NSString *)query sortBy:(BDKUntappdSortType)sortBy completion:(BDKUntappdResultBlock)completion;
+- (void)searchForBeer:(NSString *)query
+               sortBy:(BDKUntappdBeerSearchSortType)sortBy
+           completion:(BDKUntappdResultBlock)completion;
 
 /**
  Gets a list of trending beers globally.

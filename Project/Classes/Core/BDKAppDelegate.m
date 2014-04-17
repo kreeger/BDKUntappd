@@ -71,11 +71,10 @@
 }
 
 - (void)showBeersFlow {
-    BDKSearchViewController *workingListVC = [[BDKSearchViewController alloc] init];
-    workingListVC.title = @"Beer Search";
-    [workingListVC setAlertTitle:@"Beer Search" description:@"Search for a beer:"];
-    [workingListVC setPerformSearchBlock:^(NSString *query, void(^whenFinished)(NSArray *results)) {
-        [self.untappd searchForBeer:query sortBy:BDKUntappdSortTypeCheckinCount completion:^(id responseObject, NSError *error) {
+    BDKDumbListViewController *workingListVC = [[BDKDumbListViewController alloc] init];
+    workingListVC.title = @"Trending Beers";
+    [workingListVC setRefreshBlock:^(void(^whenFinished)(NSArray *results)) {
+        [self.untappd trendingBeers:^(id responseObject, NSError *error) {
             whenFinished(responseObject);
         }];
     }];

@@ -20,6 +20,10 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 - (NSMutableDictionary *)requestParamsWithMinID:(NSNumber *)minID maxID:(NSNumber *)maxID limit:(NSInteger)limit;
 - (void)handleError:(NSError *)error forTask:(NSURLSessionDataTask *)task completion:(BDKUntappdResultBlock)completion;
 
+- (NSString *)parameterValueForWishListSortType:(BDKUntappdWishListSortType)sortType;
+- (NSString *)parameterValueForDistinctBeerSortType:(BDKUntappdDistinctBeerSortType)sortType;
+- (NSString *)parameterValueForBeerSearchSortType:(BDKUntappdBeerSearchSortType)sortType;
+
 @end
 
 @implementation BDKUntappd
@@ -247,11 +251,12 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 
 #pragma mark - User detail calls
 
-- (void)badgesForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
-    NSAssert(!!username, @"A username must be supplied.");
+- (void)badgesForUser:(NSNumber *)username offset:(NSInteger)offset completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!username || !!self.accessToken, @"Either username or a saved access token must be supplied.");
     
     NSString *url = [NSString stringWithFormat:@"user/badges/%@", username];
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    if (offset > 0) params[@"offset"] = @(offset);
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
         completion([self.parser badgesFromResponseObject:responseObject], nil);
@@ -260,11 +265,16 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     }];
 }
 
-- (void)friendsForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
-    NSAssert(!!username, @"A username must be supplied.");
+- (void)friendsForUser:(NSNumber *)username
+                offset:(NSInteger)offset
+                 limit:(NSInteger)limit
+            completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!username || !!self.accessToken, @"Either username or a saved access token must be supplied.");
     
     NSString *url = [NSString stringWithFormat:@"user/friends/%@", username];
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    if (offset > 0) params[@"offset"] = @(offset);
+    if (limit > 0 && limit <= 50) params[@"limit"] = @(limit);
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
         completion([self.parser usersFromResponseObject:responseObject], nil);
@@ -273,27 +283,39 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     }];
 }
 
-- (void)wishListForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+- (void)wishListForUser:(NSNumber *)username
+                 sortBy:(BDKUntappdWishListSortType)sortBy
+                 offset:(NSInteger)offset
+             completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username, @"A username must be supplied.");
     
     NSString *url = [NSString stringWithFormat:@"user/wishlist/%@", username];
-    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    NSString *sortValue = [self parameterValueForWishListSortType:sortBy];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"sort": sortValue}];
+    if (offset > 0) params[@"offset"] = @(offset);
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
-        completion([self.parser beersFromResponseObject:responseObject], nil);
+        // Todo: account for things like created_at, friends?
+        completion([self.parser beersAndBreweriesFromResponseObject:responseObject], nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self handleError:error forTask:task completion:completion];
     }];
 }
 
-- (void)distinctBeersForUser:(NSNumber *)username compact:(BOOL)compact completion:(BDKUntappdResultBlock)completion {
+- (void)distinctBeersForUser:(NSNumber *)username
+                      sortBy:(BDKUntappdDistinctBeerSortType)sortBy
+                      offset:(NSInteger)offset
+                  completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!username, @"A username must be supplied.");
     
     NSString *url = [NSString stringWithFormat:@"user/beers/%@", username];
-    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    NSString *sortValue = [self parameterValueForDistinctBeerSortType:sortBy];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"sort": sortValue}];
+    if (offset > 0) params[@"offset"] = @(offset);
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
-        completion([self.parser beersFromResponseObject:responseObject], nil);
+        // Todo: account for things like recent_created_at, first_had, count
+        completion([self.parser beersAndBreweriesFromResponseObject:responseObject], nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self handleError:error forTask:task completion:completion];
     }];
@@ -315,15 +337,18 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     }];
 }
 
-- (void)searchForBeer:(NSString *)query sortBy:(BDKUntappdSortType)sortBy completion:(BDKUntappdResultBlock)completion {
+- (void)searchForBeer:(NSString *)query
+               sortBy:(BDKUntappdBeerSearchSortType)sortBy
+           completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!query, @"A query must be supplied.");
     
     NSString *url = @"search/beer";
-    NSString *sortByString = sortBy == BDKUntappdSortTypeAlphabetical ? @"name" : @"count";
-    NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"q": query, @"sort": sortByString}];
+    NSString *sortValue = [self parameterValueForBeerSearchSortType:sortBy];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"q": query, @"sort": sortValue}];
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
-        completion([self.parser beersFromSearchResponseObject:responseObject], nil);
+        // Note: account for things like your_count, have_had, checkin_count
+        completion([self.parser beersAndBreweriesFromResponseObject:responseObject], nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self handleError:error forTask:task completion:completion];
     }];
@@ -333,7 +358,7 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     NSString *url = @"beer/trending";
     NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
-        completion([self.parser beersFromResponseObject:responseObject], nil);
+        completion([self.parser beersFromTrendingResponseObject:responseObject], nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self handleError:error forTask:task completion:completion];
     }];
@@ -373,6 +398,35 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 
     if (completion) {
         completion(nil, error);
+    }
+}
+
+- (NSString *)parameterValueForWishListSortType:(BDKUntappdWishListSortType)sortType {
+    switch (sortType) {
+        case BDKUntappdWishListSortTypeMostRecent: return @"date";
+        case BDKUntappdWishListSortTypeMostCheckins: return @"checkin";
+        case BDKUntappdWishListSortTypeHighestRated: return @"highest_rated";
+        case BDKUntappdWishListSortTypeLowestRated: return @"lowest_rated";
+        case BDKUntappdWishListSortTypeHighestABV: return @"highest_abv";
+        case BDKUntappdWishListSortTypeLowestABV: return @"lowest_abv";
+    }
+}
+
+- (NSString *)parameterValueForDistinctBeerSortType:(BDKUntappdDistinctBeerSortType)sortType {
+    switch (sortType) {
+        case BDKUntappdDistinctBeerSortTypeMostRecent: return @"date";
+        case BDKUntappdDistinctBeerSortTypeMostCheckins: return @"checkin";
+        case BDKUntappdDistinctBeerSortTypeHighestRated: return @"highest_rated";
+        case BDKUntappdDistinctBeerSortTypeLowestRated: return @"lowest_rated";
+        case BDKUntappdDistinctBeerSortTypeHighestRatedByYou: return @"highest_rated_you";
+        case BDKUntappdDistinctBeerSortTypeLowestRatedByYou: return @"lowest_rated_you";
+    }
+}
+
+- (NSString *)parameterValueForBeerSearchSortType:(BDKUntappdBeerSearchSortType)sortType {
+    switch (sortType) {
+        case BDKUntappdBeerSearchSortTypeAlphabetical: return @"name";
+        case BDKUntappdBeerSearchSortTypeMostCheckins: return @"count";
     }
 }
 

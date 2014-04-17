@@ -46,7 +46,7 @@
                                withKeyPath:@"response.beers.items"];
 }
 
-- (NSArray *)beersFromSearchResponseObject:(id)responseObject {
+- (NSArray *)beersAndBreweriesFromResponseObject:(id)responseObject {
     NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
     NSArray *objectsToCrawl = responseObject[@"response"][@"beers"][@"items"];
     NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[objectsToCrawl count]];
@@ -55,6 +55,27 @@
         BDKUntappdBrewery *brewery = [[BDKUntappdBrewery alloc] initWithDictionary:obj[@"brewery"] dateFormatter:df];
         beer.brewery = brewery;
         [objects addObject:beer];
+    }];
+    return [objects copy];
+}
+
+- (NSArray *)beersFromTrendingResponseObject:(id)responseObject {
+    NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
+    NSMutableArray *objects = [NSMutableArray array];
+    [@[@"macro", @"micro"] enumerateObjectsUsingBlock:^(NSString *kind, NSUInteger idx, BOOL *stop) {
+        BDKUntappdBeerDistributionKind distroKind = BDKUntappdBeerDistributionKindUnknown;
+        if ([kind isEqualToString:@"macro"]) {
+            distroKind = BDKUntappdBeerDistributionKindMacro;
+        } else {
+            distroKind = BDKUntappdBeerDistributionKindMicro;
+        }
+        [responseObject[@"response"][kind][@"items"] enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+            BDKUntappdBeer *beer = [[BDKUntappdBeer alloc] initWithDictionary:obj[@"beer"] dateFormatter:df];
+            beer.distributionKind = distroKind;
+            BDKUntappdBrewery *brewery = [[BDKUntappdBrewery alloc] initWithDictionary:obj[@"brewery"] dateFormatter:df];
+            beer.brewery = brewery;
+            [objects addObject:beer];
+        }];
     }];
     return [objects copy];
 }

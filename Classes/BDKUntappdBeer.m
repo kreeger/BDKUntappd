@@ -6,6 +6,13 @@
 
 @implementation BDKUntappdBeer
 
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
+    self = [super initWithDictionary:dictionary dateFormatter:dateFormatter];
+    if (!self) return nil;
+    _distributionKind = BDKUntappdBeerDistributionKindUnknown;
+    return self;
+}
+
 #pragma mark - BDKUntappdModel
 
 - (NSDictionary *)remoteMappings {
