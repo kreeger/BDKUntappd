@@ -1,12 +1,10 @@
 //
 //  BDKUntappdBeer.h
-//  Pods
-//
-//  Created by Ben Kreeger on 3/9/14.
-//
 //
 
 #import "BDKUntappdModel.h"
+
+@class BDKUntappdBrewery;
 
 @interface BDKUntappdBeer : BDKUntappdModel
 
@@ -17,5 +15,6 @@
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *style;
 @property (assign, nonatomic, getter = isOnWishList) BOOL onWishList;
+@property (strong, nonatomic) BDKUntappdBrewery *brewery;
 
 @end

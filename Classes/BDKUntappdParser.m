@@ -46,6 +46,19 @@
                                withKeyPath:@"response.beers.items"];
 }
 
+- (NSArray *)beersFromSearchResponseObject:(id)responseObject {
+    NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
+    NSArray *objectsToCrawl = responseObject[@"response"][@"beers"][@"items"];
+    NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[objectsToCrawl count]];
+    [objectsToCrawl enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+        BDKUntappdBeer *beer = [[BDKUntappdBeer alloc] initWithDictionary:obj[@"beer"] dateFormatter:df];
+        BDKUntappdBrewery *brewery = [[BDKUntappdBrewery alloc] initWithDictionary:obj[@"brewery"] dateFormatter:df];
+        beer.brewery = brewery;
+        [objects addObject:beer];
+    }];
+    return [objects copy];
+}
+
 - (BDKUntappdBeer *)beerFromResponseObject:(id)responseObject {
     NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
     return [BDKUntappdBeer modelWithDictionary:responseObject[@"beer"] dateFormatter:df];

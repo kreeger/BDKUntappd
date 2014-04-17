@@ -72,16 +72,16 @@
 
 - (void)showBeersFlow {
     BDKSearchViewController *workingListVC = [[BDKSearchViewController alloc] init];
-    workingListVC.title = @"Brewery Search";
-    [workingListVC setAlertTitle:@"Brewery Search" description:@"Search for a brewery:"];
+    workingListVC.title = @"Beer Search";
+    [workingListVC setAlertTitle:@"Beer Search" description:@"Search for a beer:"];
     [workingListVC setPerformSearchBlock:^(NSString *query, void(^whenFinished)(NSArray *results)) {
-        [self.untappd searchForBrewery:query completion:^(id responseObject, NSError *error) {
+        [self.untappd searchForBeer:query sortBy:BDKUntappdSortTypeCheckinCount completion:^(id responseObject, NSError *error) {
             whenFinished(responseObject);
         }];
     }];
-    [workingListVC setCellDisplayBlock:^(BDKUntappdBrewery *brewery, UITableViewCell *cell) {
-        cell.textLabel.text = brewery.name;
-        cell.detailTextLabel.text = brewery.locationDisplay;
+    [workingListVC setCellDisplayBlock:^(BDKUntappdBeer *beer, UITableViewCell *cell) {
+        cell.textLabel.text = beer.name;
+        cell.detailTextLabel.text = beer.brewery.name;
     }];
     UINavigationController *workingNav = [[UINavigationController alloc] initWithRootViewController:workingListVC];
     
@@ -94,7 +94,7 @@
     }];
     [checkinVC setCellDisplayBlock:^(BDKUntappdCheckin *checkin, UITableViewCell *cell) {
         cell.textLabel.text = checkin.beer.name;
-        cell.detailTextLabel.text = checkin.brewery.name;
+        cell.detailTextLabel.text = checkin.beer.brewery.name;
     }];
     UINavigationController *checkinNav = [[UINavigationController alloc] initWithRootViewController:checkinVC];
     

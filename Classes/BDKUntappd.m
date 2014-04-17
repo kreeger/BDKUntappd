@@ -1,6 +1,5 @@
 //
 //  BDKUntappd.m
-//  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
 #import "BDKUntappd.h"
@@ -317,11 +316,27 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
 }
 
 - (void)searchForBeer:(NSString *)query sortBy:(BDKUntappdSortType)sortBy completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!query, @"A query must be supplied.");
     
+    NSString *url = @"search/beer";
+    NSString *sortByString = sortBy == BDKUntappdSortTypeAlphabetical ? @"name" : @"count";
+    NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"q": query, @"sort": sortByString}];
+    
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser beersFromSearchResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
 }
 
 - (void)trendingBeers:(BDKUntappdResultBlock)completion {
-    
+    NSString *url = @"beer/trending";
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser beersFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
 }
 
 #pragma mark - Private methods

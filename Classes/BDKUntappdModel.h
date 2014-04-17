@@ -1,6 +1,5 @@
 //
 //  BDKUntappdModel.h
-//  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
 @interface BDKUntappdModel : NSObject <NSCoding, NSCopying>

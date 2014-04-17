@@ -1,15 +1,19 @@
 //
 //  BDKUntappdCheckin.h
 //
-//  Created by Ben Kreeger on 3/4/14.
-//  Copyright (c) 2014 Ben Kreeger. All rights reserved.
-//
 
 #import "BDKUntappdCheckin.h"
+#import "BDKUntappdBeer.h"
+#import "BDKUntappdBrewery.h"
 
 @implementation BDKUntappdCheckin
 
 #pragma mark - BDKUntappdModel
+
+- (void)updateWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
+    [super updateWithDictionary:dictionary dateFormatter:dateFormatter];
+    self.beer.brewery = [[BDKUntappdBrewery alloc] initWithDictionary:dictionary[@"brewery"] dateFormatter:dateFormatter];
+}
 
 - (NSDictionary *)remoteMappings {
     return @{@"badges": @"badges",

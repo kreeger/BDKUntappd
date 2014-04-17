@@ -1,9 +1,5 @@
 //
 //  BDKUntappdVenue.h
-//  Pods
-//
-//  Created by Ben Kreeger on 3/9/14.
-//
 //
 
 #import "BDKUntappdModel.h"

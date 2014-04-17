@@ -1,9 +1,5 @@
 //
 //  BDKUntappdCategory.h
-//  Pods
-//
-//  Created by Ben Kreeger on 3/10/14.
-//
 //
 
 #import "BDKUntappdModel.h"

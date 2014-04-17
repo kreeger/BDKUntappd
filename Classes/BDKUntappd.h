@@ -1,6 +1,5 @@
 //
 //  BDKUntappd.h
-//  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
 @import Foundation;

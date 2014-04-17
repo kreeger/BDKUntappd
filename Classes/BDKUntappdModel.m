@@ -1,6 +1,5 @@
 //
 //  BDKUntappdModel.m
-//  Copyright (c) 2014 Ben Kreeger. All rights reserved.
 //
 
 #import "BDKUntappdModel.h"
