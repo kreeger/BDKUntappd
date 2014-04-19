@@ -2,5 +2,7 @@
 #import "BDKUntappdBeer.h"
 #import "BDKUntappdBrewery.h"
 #import "BDKUntappdCheckin.h"
+#import "BDKUntappdCheckinResult.h"
+#import "BDKUntappdToast.h"
 #import "BDKUntappdUser.h"
 #import "BDKUntappdVenue.h"

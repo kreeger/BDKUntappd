@@ -4,12 +4,14 @@
 
 @import Foundation;
 
-@class BDKUntappdCheckin, BDKUntappdBeer, BDKUntappdBrewery, BDKUntappdUser, BDKUntappdVenue;
+@class BDKUntappdCheckin, BDKUntappdCheckinResult, BDKUntappdBeer, BDKUntappdBrewery, BDKUntappdToast, BDKUntappdUser,
+       BDKUntappdVenue;
 
 @interface BDKUntappdParser : NSObject
 
 - (NSArray *)checkinsFromResponseObject:(id)responseObject;
 - (BDKUntappdCheckin *)checkinFromResponseObject:(id)responseObject;
+- (BDKUntappdCheckinResult *)checkinResultFromCheckinCreationResponseObject:(id)responseObject;
 
 - (NSArray *)beersFromResponseObject:(id)responseObject;
 - (NSArray *)beersAndBreweriesFromResponseObject:(id)responseObject;
@@ -18,6 +20,8 @@
 
 - (NSArray *)breweriesFromResponseObject:(id)responseObject;
 - (BDKUntappdBrewery *)breweryFromResponseObject:(id)responseObject;
+
+- (BDKUntappdToast *)toastsFromResponseObject:(id)responseObject;
 
 - (NSArray *)usersFromResponseObject:(id)responseObject;
 - (BDKUntappdUser *)userFromResponseObject:(id)responseObject;

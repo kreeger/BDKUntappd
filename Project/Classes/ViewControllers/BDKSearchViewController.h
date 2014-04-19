@@ -7,8 +7,9 @@
 
 @interface BDKSearchViewController : UITableViewController
 
-@property (copy, nonatomic) void (^performSearchBlock)(NSString *query, void (^whenFinished)(NSArray *results));
+@property (copy, nonatomic) void(^performSearchBlock)(NSString *query, void (^whenFinished)(NSArray *results));
 @property (copy, nonatomic) void(^cellDisplayBlock)(id objectForCell, UITableViewCell *cell);
+@property (copy, nonatomic) void(^cellTappedBlock)(NSIndexPath *indexPath);
 
 - (void)setAlertTitle:(NSString *)title description:(NSString *)description;
 

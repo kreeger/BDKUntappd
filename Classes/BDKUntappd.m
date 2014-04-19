@@ -7,6 +7,8 @@
 #import "BDKUntappdModels.h"
 #import "BDKUntappdParser.h"
 
+#import <tgmath.h>
+
 #define BDKStringFromBOOL(val) [NSString stringWithFormat:@"%@", val ? @"true" : @"false"]
 
 NSString * const BDKUntappdBaseURL = @"http://api.untappd.com/v4";
@@ -222,6 +224,10 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     }];
 }
 
+- (void)venueForFoursquareLocationID:(NSString *)foursquareLocationID completion:(BDKUntappdResultBlock)completion {
+    
+}
+
 - (void)infoForCheckin:(NSNumber *)checkinID completion:(BDKUntappdResultBlock)completion {
     NSAssert(!!checkinID, @"A checkin ID must be supplied.");
     
@@ -363,6 +369,186 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
         [self handleError:error forTask:task completion:completion];
     }];
 }
+
+
+#pragma mark - Checking in, commenting, and toasting
+
+- (void)checkinToBeerID:(NSNumber *)beerID
+   foursquareLocationID:(NSString *)foursquareLocationID
+               latitude:(float)latitude
+              longitude:(float)longitude
+                  shout:(NSString *)shout
+                 rating:(float)rating
+                 postTo:(BDKUntappdCheckinPostTo)postTo
+             completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!self.accessToken, @"This call requires an access token to use.");
+    NSAssert(!!beerID, @"A beer ID must be supplied.");
+    if (shout) NSAssert([shout length] <= 140, @"A supplied shout message must not exceed 140 characters.");
+    if (rating > 0) {
+        NSAssert(1.0 <= rating && rating <= 5.0, @"Rating must be between 1.0 & 5.0.");
+        NSAssert(fmod(rating, 0.5) == 0, @"Rating must be whollydivisible by 0.5.");
+    }
+    
+    float gmtOffset = [[NSTimeZone systemTimeZone] secondsFromGMT] / 3600.0;
+    NSString *timezone = [[NSTimeZone systemTimeZone] abbreviation];
+    
+    NSString *url = [NSString stringWithFormat:@"checkin/add?access_token=%@", self.accessToken];
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"bid": beerID,
+                                                                                  @"gmt_offset": @(gmtOffset),
+                                                                                  @"timezone": timezone}];
+    if (shout && ![shout isEqualToString:@""]) params[@"shout"] = shout;
+    if (latitude > 0) params[@"geolat"] = @(latitude);
+    if (longitude > 0) params[@"geolng"] = @(longitude);
+    if (rating > 0) params[@"rating"] = @(rating);
+    if ((postTo & BDKUntappdCheckinPostToFacebook) != 0) params[@"facebook"] = @"on";
+    if ((postTo & BDKUntappdCheckinPostToTwitter) != 0) params[@"twitter"] = @"on";
+    if ((postTo & BDKUntappdCheckinPostToFoursquare) != 0) params[@"foursquare"] = @"on";
+    
+    [self POST:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser checkinResultFromCheckinCreationResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+- (void)addComment:(NSString *)comment toCheckin:(NSNumber *)checkinID completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!comment, @"A comment must be supplied.");
+    NSAssert([comment length] <= 140, @"A comment cannot exceed 140 characters in length.");
+    NSAssert(!!checkinID, @"A checkinID must be supplied.");
+    
+    NSString *url = [NSString stringWithFormat:@"checkin/addcomment/%@", checkinID];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self POST:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser toastsFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+- (void)removeComment:(NSNumber *)commentID completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!commentID, @"A commentID must be supplied.");
+    
+    NSString *url = [NSString stringWithFormat:@"checkin/deletecomment/%@", commentID];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self POST:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser toastsFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+- (void)toggleToastForCheckin:(NSNumber *)checkinID completion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!checkinID, @"A checkinID must be supplied.");
+    
+    NSString *url = [NSString stringWithFormat:@"checkin/toast/%@", checkinID];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion([self.parser toastsFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+
+#pragma mark - Wish list management
+
+- (void)addBeerID:(NSNumber *)beerID toWishlistWithCompletion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!beerID, @"A beerID must be supplied.");
+    
+    NSString *url = @"user/wishlist/add";
+    NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"bid": beerID}];
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        // TODO: figure out a better way to parse this stuff :(
+        completion([self.parser beerFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+- (void)removeBeerID:(NSNumber *)beerID fromWishlistWithCompletion:(BDKUntappdResultBlock)completion {
+    NSAssert(!!beerID, @"A beerID must be supplied.");
+    
+    NSString *url = @"user/wishlist/delete";
+    NSMutableDictionary *params = [self authorizationParamsWithParams:@{@"bid": beerID}];
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        // TODO: figure out a better way to parse this stuff :(
+        completion([self.parser beerFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+
+#pragma mark - Friend management
+
+- (void)pendingFriendRequests:(BDKUntappdResultBlock)completion {
+    NSString *url = @"user/pending";
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        // TODO: figure out a better way to parse this stuff :(
+        completion([self.parser usersFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+- (void)approvePendingFriendshipForUserID:(NSNumber *)userID completion:(BDKUntappdResultBlock)completion {
+    NSString *url = [NSString stringWithFormat:@"friend/accept/%@", userID];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self POST:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        // TODO: figure out a better way to parse this stuff :(
+        completion([self.parser userFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+- (void)rejectPendingFriendshipForUserID:(NSNumber *)userID completion:(BDKUntappdResultBlock)completion {
+    NSString *url = [NSString stringWithFormat:@"friend/reject/%@", userID];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self POST:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        // TODO: figure out a better way to parse this stuff :(
+        completion([self.parser userFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+- (void)revokeFriendshipForUserID:(NSNumber *)userID completion:(BDKUntappdResultBlock)completion {
+    NSString *url = [NSString stringWithFormat:@"/v3/friend/remove/%@", userID];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        completion(responseObject, nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+- (void)requestFriendshipForUserID:(NSNumber *)userID completion:(BDKUntappdResultBlock)completion {
+    NSString *url = [NSString stringWithFormat:@"friend/request/%@", userID];
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        // TODO: figure out a better way to parse this stuff :(
+        completion([self.parser userFromResponseObject:responseObject], nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
+
+#pragma mark - Notifications
+
+- (void)notificationsForCurrentUser:(BDKUntappdResultBlock)completion {
+    NSString *url = @"notifications";
+    NSMutableDictionary *params = [self authorizationParamsWithParams:nil];
+    [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
+        // TODO: figure out a better way to parse this stuff :(
+        completion(responseObject, nil);
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self handleError:error forTask:task completion:completion];
+    }];
+}
+
 
 #pragma mark - Private methods
 

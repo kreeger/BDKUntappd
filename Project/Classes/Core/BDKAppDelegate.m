@@ -13,6 +13,8 @@
 
 @interface BDKAppDelegate () <BDKAuthViewControllerDelegate>
 
+@property (strong, nonatomic) NSArray *results;
+
 - (void)configureUntappd;
 - (void)showLoginFlow;
 - (void)showBeersFlow;
@@ -71,16 +73,24 @@
 }
 
 - (void)showBeersFlow {
-    BDKDumbListViewController *workingListVC = [[BDKDumbListViewController alloc] init];
-    workingListVC.title = @"Trending Beers";
-    [workingListVC setRefreshBlock:^(void(^whenFinished)(NSArray *results)) {
-        [self.untappd trendingBeers:^(id responseObject, NSError *error) {
+    BDKSearchViewController *workingListVC = [[BDKSearchViewController alloc] init];
+    workingListVC.title = @"Beer search";
+    [workingListVC setAlertTitle:@"Beer Search" description:@"Plug in your brew"];
+    [workingListVC setPerformSearchBlock:^(NSString *query, void(^whenFinished)(NSArray *results)) {
+        [self.untappd searchForBeer:query sortBy:BDKUntappdBeerSearchSortTypeMostCheckins completion:^(id responseObject, NSError *error) {
+            self.results = responseObject;
             whenFinished(responseObject);
         }];
     }];
     [workingListVC setCellDisplayBlock:^(BDKUntappdBeer *beer, UITableViewCell *cell) {
         cell.textLabel.text = beer.name;
         cell.detailTextLabel.text = beer.brewery.name;
+    }];
+    [workingListVC setCellTappedBlock:^(NSIndexPath *indexPath) {
+        BDKUntappdBeer *beer = self.results[indexPath.row];
+        [self.untappd checkinToBeerID:beer.identifier foursquareLocationID:nil latitude:0 longitude:0 shout:@"Hahaha, nooner!" rating:3.5f postTo:BDKUntappdCheckinPostToTwitter completion:^(id responseObject, NSError *error) {
+            NSLog(@"%@", responseObject);
+        }];
     }];
     UINavigationController *workingNav = [[UINavigationController alloc] initWithRootViewController:workingListVC];
     

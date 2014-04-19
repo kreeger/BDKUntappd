@@ -4,7 +4,7 @@
 
 @interface BDKUntappdModel : NSObject <NSCoding, NSCopying>
 
-@property (strong, nonatomic) NSString *identifier;
+@property (strong, nonatomic) NSNumber *identifier;
 @property (readonly, strong, nonatomic) NSDictionary *remoteMappings;
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary;
