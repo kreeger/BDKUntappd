@@ -301,7 +301,6 @@ NSString * const BDKUntappdAuthorizeURL = @"https://untappd.com/oauth/authorize"
     if (offset > 0) params[@"offset"] = @(offset);
     
     [self GET:url parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
-        // Todo: account for things like created_at, friends?
         completion([self.parser beersAndBreweriesFromResponseObject:responseObject], nil);
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self handleError:error forTask:task completion:completion];

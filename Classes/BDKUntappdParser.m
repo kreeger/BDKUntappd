@@ -37,7 +37,7 @@
 
 - (BDKUntappdCheckin *)checkinFromResponseObject:(id)responseObject {
     NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    return [BDKUntappdCheckin modelWithDictionary:responseObject[@"checkin"] dateFormatter:df];
+    return [BDKUntappdCheckin modelWithDictionary:responseObject[@"response"][@"checkin"] dateFormatter:df];
 }
 
 - (BDKUntappdCheckinResult *)checkinResultFromCheckinCreationResponseObject:(id)responseObject {
@@ -56,8 +56,8 @@
     NSArray *objectsToCrawl = responseObject[@"response"][@"beers"][@"items"];
     NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[objectsToCrawl count]];
     [objectsToCrawl enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
-        BDKUntappdBeer *beer = [[BDKUntappdBeer alloc] initWithDictionary:obj[@"beer"] dateFormatter:df];
-        BDKUntappdBrewery *brewery = [[BDKUntappdBrewery alloc] initWithDictionary:obj[@"brewery"] dateFormatter:df];
+        BDKUntappdBeer *beer = [BDKUntappdBeer modelWithDictionary:obj[@"beer"] dateFormatter:df];
+        BDKUntappdBrewery *brewery = [BDKUntappdBrewery modelWithDictionary:obj[@"brewery"] dateFormatter:df];
         beer.brewery = brewery;
         [objects addObject:beer];
     }];
@@ -87,7 +87,7 @@
 
 - (BDKUntappdBeer *)beerFromResponseObject:(id)responseObject {
     NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    return [BDKUntappdBeer modelWithDictionary:responseObject[@"beer"] dateFormatter:df];
+    return [BDKUntappdBeer modelWithDictionary:responseObject[@"response"][@"beer"] dateFormatter:df];
 
 }
 
@@ -100,7 +100,7 @@
 
 - (BDKUntappdBrewery *)breweryFromResponseObject:(id)responseObject {
     NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    return [BDKUntappdBrewery modelWithDictionary:responseObject[@"brewery"] dateFormatter:df];
+    return [BDKUntappdBrewery modelWithDictionary:responseObject[@"response"][@"brewery"] dateFormatter:df];
 }
 
 - (BDKUntappdToast *)toastsFromResponseObject:(id)responseObject {
@@ -117,12 +117,12 @@
 
 - (BDKUntappdUser *)userFromResponseObject:(id)responseObject {
     NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    return [BDKUntappdUser modelWithDictionary:responseObject[@"user"] dateFormatter:df];
+    return [BDKUntappdUser modelWithDictionary:responseObject[@"response"][@"user"] dateFormatter:df];
 }
 
 - (BDKUntappdVenue *)venueFromResponseObject:(id)responseObject {
     NSDateFormatter *df = [self dateFormatterForFormat:@"eee, dd MMM yyyy HH:mm:ss ZZZ"];
-    return [BDKUntappdVenue modelWithDictionary:responseObject[@"venue"] dateFormatter:df];
+    return [BDKUntappdVenue modelWithDictionary:responseObject[@"response"][@"venue"] dateFormatter:df];
 }
 
 - (NSArray *)badgesFromResponseObject:(id)responseObject {
