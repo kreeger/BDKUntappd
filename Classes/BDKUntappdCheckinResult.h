@@ -27,7 +27,6 @@
 @property (strong, nonatomic) NSDictionary *followStatus;
 @property (strong, nonatomic) NSArray *promotions;
 @property (strong, nonatomic) NSArray *badges;
-@property (readonly, strong, nonatomic) Class badges_class;
 @property (strong, nonatomic) NSArray *social;
 
 @end

@@ -26,19 +26,8 @@ static const char *property_getTypeName(objc_property_t property) {
 
 @implementation BDKUntappdModel
 
-+ (instancetype)modelWithDictionary:(NSDictionary *)dictionary {
-    return [[self alloc] initWithDictionary:dictionary dateFormatter:nil];
-}
-
 + (instancetype)modelWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
     return [[self alloc] initWithDictionary:dictionary dateFormatter:dateFormatter];
-}
-
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
-    self = [super init];
-    if (!self) return nil;
-    [self updateWithDictionary:dictionary];
-    return self;
 }
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
@@ -46,10 +35,6 @@ static const char *property_getTypeName(objc_property_t property) {
     if (!self) return nil;
     [self updateWithDictionary:dictionary dateFormatter:dateFormatter];
     return self;
-}
-
-- (void)updateWithDictionary:(NSDictionary *)dictionary {
-    [self updateWithDictionary:dictionary dateFormatter:nil];
 }
 
 - (void)updateWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
@@ -68,37 +53,6 @@ static const char *property_getTypeName(objc_property_t property) {
         
         if (![remoteValue bdk_isPresent]) return;
         if ([[self class] property:propertyName isReadOnlyForClass:[self class]]) return;
-        
-        if ([remoteValue isKindOfClass:[NSDictionary class]]) {
-            // Untappd's API has arrays nested in dictionaries with some metadata; this pulls it out and rights it.
-            if (remoteValue[@"items"]) {
-                remoteValue = remoteValue[@"items"];
-            } else {
-                Class klass = [[self class] classForPropertyName:propertyName inClass:[self class]];
-                remoteValue = [[klass alloc] initWithDictionary:remoteValue];
-            }
-        }
-        
-        if ([remoteValue isKindOfClass:[NSArray class]]) {
-            NSArray *valuesForVal = (NSArray *)remoteValue;
-            NSMutableArray *objects = [NSMutableArray arrayWithCapacity:[valuesForVal count]];
-            [valuesForVal enumerateObjectsUsingBlock:^(id subVal, NSUInteger idx, BOOL *stop) {
-                if ([[subVal class] isSubclassOfClass:[NSDictionary class]]) {
-                    SEL classTypeSelector = NSSelectorFromString([NSString stringWithFormat:@"%@_class", propertyName]);
-                    if ([self respondsToSelector:classTypeSelector]) {
-                        Class (*func)(id, SEL) = (void *)[self methodForSelector:classTypeSelector];
-                        Class klass = func(self, classTypeSelector);
-                        if ([klass isSubclassOfClass:[BDKUntappdModel class]]) {
-                            BDKUntappdModel *model = [[klass alloc] initWithDictionary:subVal];
-                            [objects addObject:model];
-                            return;
-                        }
-                    }
-                    [objects addObject:subVal];
-                }
-            }];
-            remoteValue = [objects copy];
-        }
         
         // Check for a few additional string conversions based on the real property class.
         if ([remoteValue isKindOfClass:[NSString class]]) {

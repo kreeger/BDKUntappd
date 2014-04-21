@@ -8,6 +8,8 @@
 #import "BDKUntappdBrewery.h"
 #import "BDKUntappdBadge.h"
 
+#import "NSArray+BDKUntappd.h"
+
 @implementation BDKUntappdCheckinResult
 
 - (Class)badges_class {
@@ -18,7 +20,14 @@
 
 - (void)updateWithDictionary:(NSDictionary *)dictionary dateFormatter:(NSDateFormatter *)dateFormatter {
     [super updateWithDictionary:dictionary dateFormatter:dateFormatter];
+    
     self.beer.brewery = [[BDKUntappdBrewery alloc] initWithDictionary:dictionary[@"brewery"] dateFormatter:dateFormatter];
+    
+    if (dictionary[@"badges"]) {
+        self.badges = [dictionary[@"badges"][@"items"] bdkuntappd_map:^id(id obj) {
+            return [BDKUntappdBadge modelWithDictionary:obj dateFormatter:dateFormatter];
+        }];
+    }
 }
 
 - (NSDictionary *)remoteMappings {

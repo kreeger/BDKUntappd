@@ -23,5 +23,20 @@ typedef NS_ENUM(NSInteger, BDKUntappdBeerDistributionKind) {
 @property (strong, nonatomic) NSString *style;
 @property (assign, nonatomic, getter = isOnWishList) BOOL onWishList;
 @property (strong, nonatomic) BDKUntappdBrewery *brewery;
+@property (assign, nonatomic, getter = hasHad) BOOL had;
+@property (strong, nonatomic) NSNumber *totalCount;
+@property (strong, nonatomic) NSNumber *yourCount;
+
+// Detail properties
+@property (strong, nonatomic) NSString *slug;
+@property (assign, nonatomic, getter = isHomebrew) BOOL homebrew;
+@property (strong, nonatomic) NSDate *createdAt;
+@property (strong, nonatomic) NSNumber *ratingScore;
+@property (strong, nonatomic) NSNumber *ratingCount;
+@property (strong, nonatomic) NSNumber *monthlyCount;
+@property (strong, nonatomic) NSNumber *userCount;
+@property (strong, nonatomic) NSNumber *totalUserCount;
+@property (strong, nonatomic) NSArray *media;
+@property (strong, nonatomic) NSArray *checkins;
 
 @end

@@ -7,8 +7,7 @@
 @interface BDKUntappdVenue : BDKUntappdModel
 
 @property (strong, nonatomic) NSArray *categories;
-@property (readonly, strong, nonatomic) Class categories_class;
-@property (strong, nonatomic) NSString *twitterName;
+@property (strong, nonatomic) NSString *twitterIdentifier;
 @property (strong, nonatomic) NSURL *venueURL;
 @property (strong, nonatomic) NSString *foursquareIdentifier;
 @property (strong, nonatomic) NSURL *foursquareURL;
@@ -23,5 +22,13 @@
 @property (strong, nonatomic) NSURL *venueIconMediumURL;
 @property (strong, nonatomic) NSURL *venueIconSmallURL;
 @property (strong, nonatomic) NSString *name;
+
+// Detailed fields
+@property (strong, nonatomic) NSNumber *totalCount;
+@property (strong, nonatomic) NSNumber *userCount;
+@property (strong, nonatomic) NSNumber *totalUserCount;
+@property (strong, nonatomic) NSArray *media;
+@property (strong, nonatomic) NSArray *checkins;
+@property (strong, nonatomic) NSArray *topBeers;
 
 @end
